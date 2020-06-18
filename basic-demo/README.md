@@ -228,13 +228,13 @@ var live = api.initGroupCall();
 live.setRoom(DEMO_GROUP_ID);    
 ```
 
-Now you will get a list of group members through the listener `mesibo_onParticipants`. You can choose and subscribe to the stream of each member to view it. When a new participant joins the room, `mesibo_onParticipants` will be called. 
+Now you will get a list of group members through the listener `Mesibo_onParticipants`. You can choose and subscribe to the stream of each member to view it. When a new participant joins the room, `Mesibo_onParticipants` will be called. 
 
 ```javascript
 
-mesiboNotify.prototype.mesibo_OnParticipants = function(all, latest) {    
+mesiboNotify.prototype.Mesibo_OnParticipants = function(all, latest) {    
     for(var i in latest) {
-        console.log("mesibo_Onparticipants: " + latest[i].getId());
+        console.log("Mesibo_Onparticipants: " + latest[i].getId());
         var p = latest[i];
         connectStream(p);
     }
@@ -259,7 +259,7 @@ function connectStream(stream){
 ```
 
 ### 3. View the streams of participants in the group
-You can subscribe to the stream of each participant  that you get in `mesibo_onParticipants` as follows with the `call()` method
+You can subscribe to the stream of each participant  that you get in `Mesibo_onParticipants` as follows with the `call()` method
 The `call` method takes the following parameters:
 - The ID of the HTML element where the video will be rendered
 - A callback function `on_stream` where you will be notified of the stream
@@ -403,4 +403,3 @@ Example,
     remote.muteStatus(true, true); // video mute status-remote source
     remote.muteStatus(false, true); // audio mute status-remote source
 ```
-# basic-room
