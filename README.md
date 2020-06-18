@@ -1,5 +1,5 @@
 ## Mesibo Conferencing Demos
-This repository contains the source code for the mesibo conferencing demos. There are two demos in two different folders.
+This repository contains the source code for the mesibo conferencing demos. There are two demos in two different folders. Refer to README.md file in each folder to learn about that demo.
 
 ### Basic Demo - basic-demo
 This is a basic demo. It is recommended that you first look at the basic demo to familiarize yourself with API before diving into live-demo.
