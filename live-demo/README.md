@@ -1,8 +1,8 @@
-## Mesibo Live Demo 
+## mesibo Live Demo 
 
 This repository contains the source code for the mesibo sample conferencing app hosted at [https://mesibo.com/livedemo](https://mesibo.com/livedemo), This is a fully functional, Zoom Like Video Conferencing app which you can directly integrate into your website.
 
-It is recommended that you first look at [basic demo](https://github.com/mesibo/conferencing/basicdemo) to familiarize yourself with API before diving into this app.
+It is recommended that you first look at [basic demo](https://github.com/mesibo/conferencing/tree/master/basic-demo) to familiarize yourself with API before diving into this app.
 
 > Please note that this documentation is **under progress** and will be updated. 
 
@@ -22,7 +22,6 @@ It is recommended that you first look at [basic demo](https://github.com/mesibo/
 
 We have also hosted the same code at [https://mesibo.com/livedemo](https://mesibo.com/livedemo) so that you can quickly try it out. 
 
-![Mesibo Room](mesibo-room.png)
 
 ### To be updated
 We will soon update this document to explain the app features and how it is built with mesibo APIs, in detail.  
