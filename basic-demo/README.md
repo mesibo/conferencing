@@ -60,11 +60,11 @@ const MESIBO_APP_ID = 'basicroom';
 Similarly, create four more users with the same App ID `basicroom`. 
 
 You now have five users
-![Conference Users](/images/users_list.png)
+![Conference Users](images/users_list.png)
 
 Now for a user to login to mesibo, the user needs a token. To get a token for a user, click on the `Edit` icon. Now in the `Edit User` page, copy the `Auth Token`. Replace the `TOKEN_USER_0` with the token you just copied. Replace `ADDRESS_USER_0` with `user0`.
 
-![User Token](/images/user_token_0.png)
+![User Token](images/user_token_0.png)
 
 Similarly get the token for other users and configure `demo_users` in the script `demo.js` with the respective token and user address.
 
@@ -156,7 +156,7 @@ const DEMO_GROUP_NAME = "ConferenceGroup";
 
 For the simplicity of our app, we will keep all the settings at default. In our conference room, all the participants will be able to publish live streams and view live streams.
 
-![Conference Group Settings](/images/conference_group_settings.png)
+![Conference Group Settings](images/conference_group_settings.png)
 
 In the members table notice that there are no members/participants and the table is empty. We need to add group members to have users in the conference. 
 
@@ -167,7 +167,7 @@ Now, let us add the users we created earlier as members of this group `Conferenc
 Refer to [Creating a Group](https://mesibo.com/documentation/api/backend-api/#create-a-group) for more information on creating a group. 
 
 Add the five users created earlier as members of the group.
-![Group Members](group_members.png)
+![Group Members](images/group_members.png)
 
 ### Logging-In with the selected user
 Before you proceed ensure that you have made the necessary configuration for your group and users.
@@ -403,3 +403,4 @@ Example,
     remote.muteStatus(true, true); // video mute status-remote source
     remote.muteStatus(false, true); // audio mute status-remote source
 ```
+# basic-room
