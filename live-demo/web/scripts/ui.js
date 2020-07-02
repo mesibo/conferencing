@@ -6,29 +6,29 @@ const MESIBO_FILETYPE_LOCATION = 4;
 // Get the matching status tick icon
 let getStatusClass = (status) => {
         // MesiboLog("getStatusClass", status);
-        var statusTick = "";
+        var statusTick = '';
         switch (status) {
 
                 case MESIBO_MSGSTATUS_SENT:
-                        statusTick = "far fa-check-circle";
+                        statusTick = 'far fa-check-circle';
                         break;
 
                 case MESIBO_MSGSTATUS_DELIVERED:
-                        statusTick = "fas fa-check-circle";
+                        statusTick = 'fas fa-check-circle';
                         break;
 
 
                 case MESIBO_MSGSTATUS_READ:
-                        statusTick = "fas fa-check-circle";
+                        statusTick = 'fas fa-check-circle';
                         break;
 
                 default:
-                        statusTick = "far fa-clock";
+                        statusTick = 'far fa-clock';
         }
 
         //MESIBO_MSGSTATUS_FAIL is 0x80
-        if(status > 127) 
-            statusTick = "fas fa-exclamation-circle";
+        if (status > 127)
+            statusTick = 'fas fa-exclamation-circle';
 
         return statusTick;
 };

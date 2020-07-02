@@ -1,4 +1,4 @@
-// config.js
+//utils.js
 
 /** Copyright (c) 2019 Mesibo
  * https://mesibo.com
@@ -41,21 +41,63 @@
  *
  *
  */
-const MESIBO_APP_ID = "live";
 
-/* If you are hosting Mesibo backend on your own server, change this accordingly.
- * Refer https://github.com/mesibo/messenger-app-backend
- */
-const MESIBO_API_URL = "https://app.mesibo.com/api.php";
+let decodeString = (s) => {
+	// console.log(s);
+	if (!s)
+		return '';
+	return new TextDecoder('utf-8').decode(s);
+};
 
-/* File url sources */
-var MESIBO_DOWNLOAD_URL = "https://appimages.mesibo.com/";
-var MESIBO_UPLOAD_URL = "https://s3.mesibo.com/api.php";
+let isValidString = (ele)=>{
+        return isValid(ele) && ""!=ele;
+};
+
+// One validation function for all file types    
+let isValidFileType = (fName, fType)=> {
+    var extensionLists = {}; //Create an object for all extension lists
+    extensionLists.video = ['m4v', 'avi', 'mpg', 'mp4', 'webm'];
+    extensionLists.image = ['jpg', 'gif', 'bmp', 'png'];
+    extensionLists.audio = ['mp3', 'mp4', 'aac', 'flac', 'm4a', 'wva'];
+    extensionLists.document = ['doc', 'txt', 'pdf', 'docx', 'xls', 'xlx'];
+    return extensionLists[fType].indexOf(fName.split('.').pop()) > -1;
+}
+
+let isValid = (ele)=>{
+        return null!=ele && undefined!=ele && NaN!=ele;
+};
+
+let isValidImage = (fName) =>{
+    if(!isValidString(fName))
+        return false;
+        
+    return isValidFileType(fName, 'image');
+};
+
+let isGroup = (user) => {
+        if(!isValid(user))
+            return false;
+
+        if(undefined == user.groupid)
+            return false;
+
+        return (user.groupid > 0);
+}
+
+let setElementDimension = (id, val, width) =>{
+    if(!isValid(ele) || !isValid(val) || val<=0 || !isValid(width))
+        return -1;
+
+    var ele = document.getElementById(id);
+    if(!isValid(ele))
+        return -1;
+
+    if(width)
+        ele.style.width = val + 'px';
+    else
+        ele.style.height = val + 'px'; 
+
+}
 
 
-/* Debug Mode Configuration */
-isDebug = true ;// toggle this to turn on / off for global control
-if (isDebug) var MesiboLog = console.log.bind(window.console);
-else var MesiboLog = function() {}
 
-var ErrorLog =  console.log.bind(window.console);

@@ -1,7 +1,3 @@
-body {
-  padding-top: 60px;
-}
-
 
 .local-video-holder{
   position:relative;
@@ -88,7 +84,7 @@ body {
 .stream-options :hover{
   font-size:1.1em;
   /*transition: 0.2s;*/
-  color: #00868b;
+  color: #00bfc6;
 }
 
 
@@ -144,9 +140,14 @@ body {
   overflow-y: none;
   white-space: nowrap;
 }
-.horizonatal-scroll-stream > .row > .col-sm-4 {
+.horizonatal-scroll-stream > .row > .strip-thumbnail{
   display: inline-block;
   float: none;
+}
+
+.strip-thumbnail {
+  width: 177.77px; 
+  height: 100px;
 }
 
 .modal-dialog-full-width {
@@ -249,3 +250,17 @@ input[type=number] {
     -o-transform: rotate(225deg);
     transform: rotate(225deg);
 }
+
+.connection-indicator{
+  height: 10px;
+  background-color: #00999f;
+  border-radius: 70%;
+  display: inline-block;
+}
+
+ .screen-share-options > a:hover, .screen-share-options > a:focus {
+            background-image:none !important;
+ }
+ .screen-share-options > a:hover, .screen-share-options > a:focus {
+            background-color:#006d72 !important;
+ }
