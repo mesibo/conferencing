@@ -31,7 +31,7 @@
  
 
     <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-    <script type="text/javascript" src="https://api.mesibo.com/mesibo3.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://api.mesibo.com/mesibo.js" crossorigin="anonymous"></script>
     <script type="text/javascript" src="scripts/controller.js"></script>
 
     <script src="https://www.google.com/recaptcha/api.js?render=6LceR_sUAAAAAEfV7LZK2cOaOHRzPSCNEK-_jcfU"></script>
@@ -45,7 +45,6 @@
 
     <script type="text/javascript" src="scripts/app-utils.js"></script>
     <script type="text/javascript" src="scripts/login.js"></script>
-    <script type="text/javascript" src="scripts/ui.js"></script>
     <script type="text/javascript" src="scripts/controller.js"></script>
     <!--SCRIPTINCLUDEEND-->  
 </head>
@@ -214,7 +213,7 @@
                 </div>
 
 
-               <div class="mx-auto text-white px-2 rounded" style="background-color: #00868b; color: white; width: 100%; text-align: center; margin-bottom: 2px">Notifications</div>
+               <div class="mx-auto text-white px-2 rounded" style="background-color: #00868b; color: white; width: 100%; text-align: center; margin-bottom: 2px; margin-top: 2px">Notifications</div>
               <div id="ticker_messages_area" style="text-align: left; overflow-x: hidden; overflow-y: scroll; bottom: 0; height: 100px"> 
                 <div  class="d-flex flex-row w-100" ng-repeat="msg in ticker_messages track by $index" ng-if="ticker_messages[$index] != null" tabindex="0" style="padding-right: 5px; padding-top: 2px">
                  
@@ -609,9 +608,9 @@
         </div>
         <!--=============== File modal end===============-->
     </div>
-          <!-- Chat popup end -->  
+          <!-- Chat popup end -->
+
 <script type="text/javascript">
- 
 
 	if(isMobileDetected()){
 		alert('For a better experience using the Sample Conferencing App, it is recommended that you use it on a desktop. The native mobile version, for Android & iOS is currently under development.');

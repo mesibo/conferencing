@@ -1,27 +1,82 @@
+/** Copyright (c) 2019 Mesibo
+ * https://mesibo.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the terms and condition mentioned
+ * on https://mesibo.com as well as following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions, the following disclaimer and links to documentation and
+ * source code repository.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * Neither the name of Mesibo nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific prior
+ * written permission.
+ *
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Documentation
+ * https://mesibo.com/documentation/
+ *
+ * Source Code Repository
+ * https://github.com/mesibo/conferencing/blob/master/live-demo/web/
+ *
+ *
+ */
+
+const MESIBO_FILETYPE_IMAGE = 1;
+const MESIBO_FILETYPE_VIDEO = 2;
+const MESIBO_FILETYPE_AUDIO = 3;
+const MESIBO_FILETYPE_LOCATION = 4;
+
+
 //For debugging purposes only
 function getScope(){
 	return angular.element(document.getElementById('mesiboliveapp')).scope();
 };
 
+function _generateStreamId(uid, type){
+	if(!(uid && type))
+		return -1;
+
+	return (type << 32) | uid;		
+}
+
 function getStreamId(s){
 	if(!(s && s.getId && s.getType)){
 		ErrorLog('getStreamId', 'Invalid stream', s);
-		return RESULT_FAIL;
+		return -1;
 	}
 
 	const uid = s.getId();
 	if(typeof uid != 'number' || isNaN(uid) || uid < 0){
 		ErrorLog('getStreamId', 'Invalid uid');
-		return RESULT_FAIL;
+		return -1;
 	}
 
 	const type = s.getType();
 	if(typeof type != 'number' || isNaN(type) || type < 0){
 		ErrorLog('getStreamId', 'Invalid type');
-		return RESULT_FAIL;
+		return -1;
 	}
 	
-	return (type << 32) | uid;
+	return _generateStreamId(uid, type);
 }	
 
 function getStreamName(s){	
@@ -48,6 +103,138 @@ function getStreamName(s){
 
 	return stream_name;
 }
+
+// Get the matching status tick icon
+let getStatusClass = (status) => {
+        // MesiboLog("getStatusClass", status);
+        var statusTick = '';
+        switch (status) {
+
+                case MESIBO_MSGSTATUS_SENT:
+                        statusTick = 'far fa-check-circle';
+                        break;
+
+                case MESIBO_MSGSTATUS_DELIVERED:
+                        statusTick = 'fas fa-check-circle';
+                        break;
+
+
+                case MESIBO_MSGSTATUS_READ:
+                        statusTick = 'fas fa-check-circle';
+                        break;
+
+                default:
+                        statusTick = 'far fa-clock';
+        }
+
+        //MESIBO_MSGSTATUS_FAIL is 0x80
+        if (status > 127)
+            statusTick = 'fas fa-exclamation-circle';
+
+        return statusTick;
+};
+
+// If the status value is read type, color it blue. Default color of status icon is gray
+let getStatusColor = (status) => {
+        var statusColor = "";
+        switch (status) {
+                case MESIBO_MSGSTATUS_READ:
+                        statusColor = "#34b7f1";
+                        break;
+
+                default:
+                        statusColor = "grey";
+        }
+        //MESIBO_MSGSTATUS_FAIL is 0x80
+        if(status > 127) 
+            statusColor = "red";
+
+        return statusColor;
+};
+
+let getFileIcon = (f) =>{
+
+
+    var type = f.filetype;
+    if(undefined == type)
+        return "";
+
+
+    var fileIcon = "fas fa-paperclip";
+    switch (type) {
+
+            //Image
+            case MESIBO_FILETYPE_IMAGE:
+                    fileIcon = "fas fa-image";
+                    break;
+
+            //Video
+            case MESIBO_FILETYPE_VIDEO:
+                    fileIcon = "fas fa-video";
+                    break;
+
+            //Audio
+            case MESIBO_FILETYPE_AUDIO:
+                    fileIcon = "fas fa-music";
+                    break;
+
+            //Location
+            case MESIBO_FILETYPE_LOCATION:
+                    fileIcon = "fas fa-map-marker-alt";
+    }
+
+    return fileIcon;
+
+}
+
+let getFileType = (f) =>{
+
+    var type = f.filetype;
+    if(undefined == type)
+        return "";
+
+    var fileType = "Attachment";
+    switch (type) {
+
+            //Image
+            case MESIBO_FILETYPE_IMAGE:
+                    fileType = "Image";
+                    break;
+
+            //Video
+            case MESIBO_FILETYPE_VIDEO:
+                    fileType = "Video";
+                    break;
+
+            //Audio
+            case MESIBO_FILETYPE_AUDIO:
+                    fileType = "Audio";
+                    break;
+
+            //Location
+            case MESIBO_FILETYPE_LOCATION:
+                    fileType = "Location";
+    }
+
+    return fileType;
+
+}
+
+let isSentMessage = (status) =>{
+        if((status === MESIBO_MSGSTATUS_RECEIVEDREAD) || (status === MESIBO_MSGSTATUS_RECEIVEDNEW))
+            return false;
+        else
+            return true;
+};
+
+
+let imgError = (image) => {
+    MesiboLog("imgError");
+    image.onerror = "";
+    image.src = MESIBO_DEFAULT_PROFILE_IMAGE;
+    return true;
+};
+
 
 
 /**
@@ -117,6 +304,8 @@ window.onkeydown=function(event){
 	}
 }
 
+
+
 $(document).keyup(function(e) {
 	if (e.keyCode === 27){    // esc
 		MesiboLog('Hide permission prompt');
@@ -155,5 +344,11 @@ function isBrowserOutdated() {
 	}
 }
 
+function exitRoomPrompt(){
+	MesiboLog('Sure to exit?');
+	alert('Sure to exit?');
+	MesiboLog(getScope().exitRoom());
+	getScope().exitRoom()
+}
 
 

@@ -37,7 +37,7 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/samples/js-beta
+ * https://github.com/mesibo/conferencing/tree/master/live-demo/web
  *
  *
  */
@@ -71,10 +71,10 @@ MesiboApp.prototype.fetchContacts = async function(userToken, ts, phones) {
 	if (!isValid(phones) || !isValid(phones.length) || !phones.length)
 		phones = [];
 
-	if (!isValidString(MESIBO_API_URL))
+	if (!isValidString(MESIBO_API_BACKEND))
 		return -1;
 	//Request to back-end service, to fetch contact details and profile details
-	const response = await fetch(MESIBO_API_URL + '?op=getcontacts&token=' + userToken + '&ts=' + ts + '&phones=' + phones);
+	const response = await fetch(MESIBO_API_BACKEND + '?op=getcontacts&token=' + userToken + '&ts=' + ts + '&phones=' + phones);
 
 	const contacts_bundle = await response.json(); //extract JSON from the HTTP response
 	MesiboLog(contacts_bundle);

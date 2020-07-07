@@ -41,9 +41,14 @@
 const MESIBO_APP_ID = 'live';
 
 /* If you are hosting Mesibo backend on your own server, change this accordingly.
- * Refer https://github.com/mesibo/messenger-app-backend
+ * Refer https://github.com/mesibo/conferencing/tree/master/live-demo/backend 
  */
-const MESIBO_API_URL = 'https://app.mesibo.com/api.php';
+const MESIBO_API_BACKEND = 'https://app.mesibo.com/conf/api.php';
+
+/* If you are hosting Mesibo backend on your own server, 
+ * use your own captcha token 
+ */
+const MESIBO_CAPTCHA_TOKEN = '6LceR_sUAAAAAEfV7LZK2cOaOHRzPSCNEK-_jcfU';
 
 /* File url sources */
 var MESIBO_DOWNLOAD_URL = 'https://appimages.mesibo.com/';

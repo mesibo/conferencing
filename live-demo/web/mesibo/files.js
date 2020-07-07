@@ -37,11 +37,10 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/samples/js-beta
+ * https://github.com/mesibo/conferencing/tree/master/live-demo/web 
  *
  *
  */
-
 function MesiboFile(s) {
 	this.scope = s;
 	this.api = {};
@@ -54,10 +53,10 @@ MesiboFile.prototype.init = function() {
 
 
 MesiboFile.prototype.getFileType = function(filename) {
-    const MESIBO_FILETYPE_IMAGE = 1;
-    const MESIBO_FILETYPE_VIDEO = 2;
-    const MESIBO_FILETYPE_AUDIO = 3;
-    const MESIBO_FILETYPE_OTHER = 10;
+	const MESIBO_FILETYPE_IMAGE = 1;
+	const MESIBO_FILETYPE_VIDEO = 2;
+	const MESIBO_FILETYPE_AUDIO = 3;
+	const MESIBO_FILETYPE_OTHER = 10;
 
 	if (isValidFileType(filename, 'image'))
 		return MESIBO_FILETYPE_IMAGE;
@@ -195,8 +194,8 @@ MesiboFile.prototype.sendResizedImage = function(file, max_width, max_height, im
 
 MesiboFile.prototype.uploadSendFile = async function(peer, groupid) {
 	MesiboLog('uploadSendFile', peer, groupid);
-    if (!isValidString(peer) && !isValid(groupid))
-    	return; //Neither a valid one-to-one to group message
+	if (!isValidString(peer) && !isValid(groupid))
+		return; //Neither a valid one-to-one to group message
 
 	var f = this.scope.selected_file;
 	MesiboLog(f.name);

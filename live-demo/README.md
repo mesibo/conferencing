@@ -1,10 +1,8 @@
 ## mesibo Live Demo 
 
-This repository contains the source code for the mesibo sample conferencing app hosted at [https://mesibo.com/livedemo](https://mesibo.com/livedemo), This is a fully functional, Zoom Like Video Conferencing app which you can directly integrate into your website.
+This folder contains the source code for [mesibo sample conferencing app](https://mesibo.com/livedemo). This is a fully functional, Zoom Like Video Conferencing app which you can directly integrate into your website. 
 
-It is recommended that you first look at [basic demo](https://github.com/mesibo/conferencing/tree/master/basic-demo) to familiarize yourself with API before diving into this app.
-
-> Please note that this documentation is **under progress** and will be updated. 
+We have also hosted the same code at [https://mesibo.com/livedemo](https://mesibo.com/livedemo) so that you can quickly try it out. 
 
 ## Features:
 - Group Voice and Video Call with unlimited members
@@ -16,14 +14,11 @@ It is recommended that you first look at [basic demo](https://github.com/mesibo/
 - One-to-One chat
 - Invite Participants
 
-### Known Issues
-- If both remote end and local end participant has muted video, remote unmuting overrides mute 
-- Muting audio while sharing the screen, pops up screen permission
 
-We have also hosted the same code at [https://mesibo.com/livedemo](https://mesibo.com/livedemo) so that you can quickly try it out. 
+There are two sub-folders:
+- **backend** contains the source code for hosting the backend APIs for the app
+- **web** contains the source code for the app which you can directly integrate into your website.
 
-
-### To be updated
-We will soon update this document to explain the app features and how it is built with mesibo APIs, in detail.  
+Refer to the respective readme files in each folder. 
 
 

@@ -37,7 +37,7 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/samples/js-beta
+ * https://github.com/mesibo/conferencing/tree/master/live-demo/web
  *
  *
  */

@@ -1,6 +1,49 @@
-var myApp = angular.module('mlApp', []);
+/** Copyright (c) 2019 Mesibo
+ * https://mesibo.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the terms and condition mentioned
+ * on https://mesibo.com as well as following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions, the following disclaimer and links to documentation and
+ * source code repository.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * Neither the name of Mesibo nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific prior
+ * written permission.
+ *
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Documentation
+ * https://mesibo.com/documentation/
+ *
+ * Source Code Repository
+ * https://github.com/mesibo/conferencing/blob/master/live-demo/web/
+ *
+ *
+ */
 
-myApp.directive('onFinishRender', function($timeout) {
+
+var mesiboLive = angular.module('mlApp', []);
+
+mesiboLive.directive('onFinishRender', function($timeout) {
 	console.log('onFinishRender-directive');
 	return {
 		link: function(scope, element, attr) {
@@ -13,7 +56,7 @@ myApp.directive('onFinishRender', function($timeout) {
 	};
 });
 
-myApp.directive('onExpandedScreenRender', function($timeout) {
+mesiboLive.directive('onExpandedScreenRender', function($timeout) {
 	console.log('onExpandedScreenRender-directive');
 	return {
 		link: function(scope, element, attr) {
@@ -25,11 +68,10 @@ myApp.directive('onExpandedScreenRender', function($timeout) {
 });
 
 
-
-myApp.controller('roomController', ['$scope', '$window', '$compile', '$timeout', '$anchorScroll', function($scope, $window, $compile, $timeout, $anchorScroll) {
+mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$timeout', '$anchorScroll', function($scope, $window, $compile, $timeout, $anchorScroll) {
 
 	const DEFAULT_GRID_MODE = 1;
-	const DEFAULT_STREAMS_PER_PAGE = 16;
+	const MAX_STREAMS_PER_PAGE = 16;
 	const PLATFORM_IS_MOBILE = isMobileDetected();
 	const DEFAULT_ASPECT_RATIO =  PLATFORM_IS_MOBILE ? 9 / 16 : 16 / 9;
 	const MAX_GRID_MODE = PLATFORM_IS_MOBILE ? 2 : 4;
@@ -78,7 +120,7 @@ myApp.controller('roomController', ['$scope', '$window', '$compile', '$timeout',
 
 
 	$scope.grid_mode = DEFAULT_GRID_MODE;
-	$scope.max_streams_per_page = DEFAULT_STREAMS_PER_PAGE;
+	$scope.max_streams_per_page = MAX_STREAMS_PER_PAGE;
 	$scope.grid_width = 0;
 	$scope.grid_height = 0;
 
@@ -87,9 +129,7 @@ myApp.controller('roomController', ['$scope', '$window', '$compile', '$timeout',
 	const POPUP_HEIGHT = 250;
 	$scope.messageSession = {};
 	const MAX_MESSAGES_READ = 200;
-	const BODY_PADDING_NORMAL = 55;
-	const BODY_PADDING_FULLSCREEN = 10;
-
+	
 	$scope.mesibo = {};
 
 	//Files
@@ -133,6 +173,8 @@ myApp.controller('roomController', ['$scope', '$window', '$compile', '$timeout',
 	};
 
 	$scope.addTicker = function(message) {
+		if(!message)
+			return;
 		var tm = {};
 		tm.time = $scope.getTime();
 		tm.message = message;
@@ -212,7 +254,8 @@ myApp.controller('roomController', ['$scope', '$window', '$compile', '$timeout',
 
 	$scope.exitRoom = function() {
 		_resetRoomCredentials();
-		$scope.publisher.hangup();
+		if($scope.publisher && $scope.publisher.hangup)
+			$scope.publisher.hangup();
 		window.open('login.html', '_self');
 	};
 
@@ -383,7 +426,7 @@ myApp.controller('roomController', ['$scope', '$window', '$compile', '$timeout',
 			$scope.addTicker('You are Online');
 			MesiboLog('======> You are online');
 
-			if (isValid($scope.publisher) && !$scope.publisher.isPublished) {
+			if (isValid($scope.publisher) && !$scope.publisher.isPublished && $scope.room.publish == 1) {
 				$scope.publish($scope.publisher);
 			}
 		}
@@ -402,11 +445,14 @@ myApp.controller('roomController', ['$scope', '$window', '$compile', '$timeout',
 	$scope.Mesibo_OnMessage = function(m, data) {
 		MesiboLog('Mesibo_onMessage', m, data);
 
-		var ticker_message = 'You have a new message';
-		if (isValid($scope.addressBook[m.peer]))
-			ticker_message = 'You have a new message from ' + $scope.addressBook[m.peer];
+		if(!(m && m.peer && $scope.addressBook[m.peer])){
+			return;
+		}
 
-		if (isValid(m.groupid) && m.groupid > 0)
+		var ticker_message = '';				
+		ticker_message = 'You have a new message from ' + $scope.addressBook[m.peer];
+
+		if (m.groupid && m.peer)
 			ticker_message = 'You have a new group message from ' + $scope.addressBook[m.peer];
 
 		$scope.addTicker(ticker_message);
@@ -545,7 +591,7 @@ myApp.controller('roomController', ['$scope', '$window', '$compile', '$timeout',
 
 	};
 
-	$scope.stopScreen = function(s) {
+	$scope.removeScreen = function(s) {
 		for (var i = $scope.local_screens.length - 1; i >= 0; i--) {
 			if ($scope.local_screens[i] === s) {
 				$scope.local_screens[i].hangup();
@@ -563,7 +609,7 @@ myApp.controller('roomController', ['$scope', '$window', '$compile', '$timeout',
 		if (p.isLocal()) {
 			if (p.getType() > 0) {
 				p.hangup();
-				$scope.stopScreen(p);
+				$scope.removeScreen(p);
 				return;
 			}
 			var rv = $scope.publisher.hangup();
@@ -917,7 +963,7 @@ myApp.controller('roomController', ['$scope', '$window', '$compile', '$timeout',
 		if (!isValid(stream))
 			return '';
 
-		if (stream.muteStatus(false) == true)
+		if (stream.muteStatus && stream.muteStatus(false) == true)
 			return 'fas fa-microphone-slash';
 
 		return 'fas fa-microphone';
@@ -1499,15 +1545,11 @@ myApp.controller('roomController', ['$scope', '$window', '$compile', '$timeout',
 			toastr.error('You do not have the permission to publish');
 		}
 		else {
-			$scope.publisher = $scope.live.getLocalParticipant(0, $scope.user.name, $scope.user.address);
-			// $scope.spublisher = $scope.live.getLocalParticipant(STREAM_SCREEN, $scope.user.name, $scope.user.address);
-			// $scope.sspublisher = $scope.live.getLocalParticipant(3, $scope.user.name, $scope.user.address);
-
+			$scope.publisher = $scope.live.getLocalParticipant(0, $scope.user.name, $scope.user.address);		
 		}
 
 		MesiboLog('publisher', $scope.publisher);
 
-		$scope.call = new MesiboCall($scope);
 		$scope.file = new MesiboFile($scope);
 
 		$scope.refresh();
@@ -2019,5 +2061,6 @@ myApp.controller('roomController', ['$scope', '$window', '$compile', '$timeout',
 	$scope.init();
 
 }]);
+
 
 

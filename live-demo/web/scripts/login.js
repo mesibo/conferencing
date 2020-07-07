@@ -1,7 +1,49 @@
+/** Copyright (c) 2019 Mesibo
+ * https://mesibo.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the terms and condition mentioned
+ * on https://mesibo.com as well as following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions, the following disclaimer and links to documentation and
+ * source code repository.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * Neither the name of Mesibo nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific prior
+ * written permission.
+ *
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Documentation
+ * https://mesibo.com/documentation/
+ *
+ * Source Code Repository
+ * https://github.com/mesibo/conferencing/blob/master/live-demo/web/
+ *
+ *
+ */
+
+
 const _credentialLoginRecord = 'mesibo_credential_login_record';
 const _credentialRoomRecord = 'mesibo_credential_room_record';
 
-const mesibo_captcha_token = '6LceR_sUAAAAAEfV7LZK2cOaOHRzPSCNEK-_jcfU';
 
 const PARTICIPANT_CAN_VIEW = 0;
 const PARTICIPANT_CAN_PUBLISH = 1;
@@ -175,8 +217,8 @@ function createXMLHTTPObject() {
           document.getElementById('login-spinner').style.display = 'inline-block';
 
           console.log('login with otp');
-          MesiboLog('https://app.mesibo.com/conf/api.php?' + 'op=login&appid=' + appid + '&email=' + email + '&name=' + name + '&code=' + code);
-          sendRequest('https://app.mesibo.com/conf/api.php', loginCallback, 'op=login&appid=' + appid + '&email=' + email + '&name=' + name + '&code=' + code);
+          MesiboLog(MESIBO_API_BACKEND + '?op=login&appid=' + appid + '&email=' + email + '&name=' + name + '&code=' + code);
+          sendRequest(MESIBO_API_BACKEND, loginCallback, 'op=login&appid=' + appid + '&email=' + email + '&name=' + name + '&code=' + code);
       }
       else if (isValidString(name) && isValidString(email)) {
           //Send OTP to email
@@ -185,14 +227,17 @@ function createXMLHTTPObject() {
           document.getElementById('login-spinner').style.display = 'inline-block';
 
           grecaptcha.ready(function() {
-            grecaptcha.execute(mesibo_captcha_token, {action: 'login'}).then(function(token) {
+            grecaptcha.execute(MESIBO_CAPTCHA_TOKEN, {action: 'login'}).then(function(token) {
                 // MesiboLog('token', token);
                 if (!isValidString(token)) {
                 _displayError('Invalid captcha');
                 return -1;
                 }
 
-                sendRequest('https://app.mesibo.com/conf/api.php', loginCallback, 'op=login&email=' + email + '&name=' + name + '&captcha=' + token);
+                MesiboLog(MESIBO_CAPTCHA_TOKEN);
+
+                MesiboLog(MESIBO_API_BACKEND + '?op=login&appid=' + appid + '&email=' + email + '&name=' + name + '&captcha=' + token);        
+                sendRequest(MESIBO_API_BACKEND, loginCallback, 'op=login&appid=' + appid + '&email=' + email  + '&name=' + name + '&captcha=' + token);
 
               });
             });
@@ -602,17 +647,17 @@ function createXMLHTTPObject() {
     document.getElementById('join-room-spinner').style.display = 'inline-block';
 
     grecaptcha.ready(function() {
-      grecaptcha.execute(mesibo_captcha_token, {action: 'login'}).then(function(token) {
+      grecaptcha.execute(MESIBO_CAPTCHA_TOKEN, {action: 'login'}).then(function(token) {
           // MesiboLog(token);
           if (!isValidString(token)) {
             _displayError('Invalid captcha');
             return -1;
           }
 
-          MesiboLog('https://app.mesibo.com/conf/api.php?' + 'token=' + room.token + '&op=joingroup&gid=' + room.gid + '&pin=' + room.pin + '&captcha=' + token);
+          MesiboLog(MESIBO_API_BACKEND + '?token=' + room.token + '&op=joingroup&gid=' + room.gid + '&pin=' + room.pin + '&captcha=' + token);
           var request = 'token=' + room.token + '&op=joingroup&gid=' + room.gid + '&pin=' + room.pin + '&captcha=' + token;
 
-          sendRequest('https://app.mesibo.com/conf/api.php', enterRoomCallback, request);
+          sendRequest(MESIBO_API_BACKEND, enterRoomCallback, request);
 
          });
     });
@@ -689,17 +734,17 @@ function createXMLHTTPObject() {
     document.getElementById('join-room-spinner').style.display = 'inline-block';
 
     grecaptcha.ready(function() {
-      grecaptcha.execute(mesibo_captcha_token, {action: 'login'}).then(function(token) {
+      grecaptcha.execute(MESIBO_CAPTCHA_TOKEN, {action: 'login'}).then(function(token) {
           // MesiboLog(token);
           if (!isValidString(token)) {
             _displayError('Invalid captcha');
             return -1;
           }
 
-          // MesiboLog("https://app.mesibo.com/conf/api.php?"+"token=" + room.token +"&op=setgroup&name=" + room.name + "&type=" + room.type+ "&resolution=" + room.quality + "&pin=" + room.pin+ "&captcha=" + token);
+          MesiboLog(MESIBO_API_BACKEND+"?token=" + room.token +"&op=setgroup&name=" + room.name + "&type=" + room.type+ "&resolution=" + room.quality + "&pin=" + room.pin+ "&captcha=" + token);
           var request = 'token=' + room.token + '&op=setgroup&name=' + room.name + '&resolution=' + room.quality + '&captcha=' + token;
 
-          sendRequest('https://app.mesibo.com/conf/api.php', createRoomCallback, request);
+          sendRequest(MESIBO_API_BACKEND, createRoomCallback, request);
 
          });
     });
@@ -846,7 +891,7 @@ function createXMLHTTPObject() {
     document.getElementById('my-rooms-spinner').style.display = 'inline-block';
 
     var request = 'token=' + room.token + '&op=rooms';
-    sendRequest('https://app.mesibo.com/conf/api.php', showRoomsCallback, request);
+    sendRequest(MESIBO_API_BACKEND, showRoomsCallback, request);
 
     return;
 

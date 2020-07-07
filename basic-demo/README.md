@@ -303,7 +303,7 @@ Call the `getLocalParticipant` method to initialize local publisher(the stream y
 ```javascript
 
 // Create a local participant, Set Publisher name and address
-var publisher = live.getLocalParticipant(USER_NAME, USER_ADDRESS); 
+var publisher = live.getLocalParticipant(STREAM_ID, USER_NAME, USER_ADDRESS); 
 publish(publisher);
 ```    
 You are the publisher. As a member of the conference room group, you can stream your self, which other members can view.

@@ -5,7 +5,8 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
    <title>Mesibo Live</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+ 
+   <link rel="stylesheet" href="third-party/bootstrap.min.css">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
@@ -19,14 +20,15 @@
     <!--SCRIPTINCLUDESTART-->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"  crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="third-party/bootstrap.min.js"></script>
+
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
 
     <script src="assets/scripts/platform.js"></script>
  
    <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-    <script type="text/javascript" src="https://api.mesibo.com/mesibo3.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://api.mesibo.com/mesibo.js" crossorigin="anonymous"></script>
     <script type="text/javascript" src="scripts/controller.js"></script>
 
     <script src="https://www.google.com/recaptcha/api.js?render=6LceR_sUAAAAAEfV7LZK2cOaOHRzPSCNEK-_jcfU"></script>
@@ -40,7 +42,6 @@
 
     <script type="text/javascript" src="scripts/app-utils.js"></script>
     <script type="text/javascript" src="scripts/login.js"></script>
-    <script type="text/javascript" src="scripts/ui.js"></script>
     <script type="text/javascript" src="scripts/controller.js"></script>
     <!--SCRIPTINCLUDEEND-->  
 </head>
@@ -49,16 +50,17 @@
  <a href="https://github.com/mesibo/conferencing" style="color: grey; padding-bottom: 10px ; text-decoration:none">&nbsp;<img width="100px" src="assets/images/mesibo-logo-m.png">&nbsp;Live&nbsp;</a>
  <span class="connection-indicator" style="width:10px" ng-style ="{'background-color': getStatusIndicator(mesibo_connection_status)}"></span>
 
- <span  style="color: #00868b;text-align: center; display: inline-block; margin:0px" >
+ <span  style="color: #00868b;text-align: center; display: inline-block; margin:0px" ng-cloak="isMesiboConnected()">
 	 <div style="font-size: 25px">
 		 <i class="fa fa-comments" aria-hidden="true" ng-click="showPopupChat()" style = "cursor:pointer;padding-left: 10px;width: 50px" title="Group Chat">{{group_messsage_notification}}</i>
+		 <i class="fa fa-user-plus" aria-hidden="true" onclick="showInviteForm()" style = "color: #00868b; cursor:pointer;" ng-if="room.pin && room.spin" title="Invite"></i>
 		 <i class="fa fa-power-off" aria-hidden="true" ng-click="exitRoomForm()" style = "cursor:pointer;   display: inline-block;" title="Exit Room"></i>
 	</div>
   </span>    
 
       <!--Invite Modal Start -->
             <div id="ModalInviteForm" class="modal fade">
-              <div class="modal-dialog" style="max-width: 80vw; max-height: 80vh" role="document">
+              <div class="modal-dialog" style="max-width: 100vw; max-height: 100vh" role="document">
                       <div class="modal-content">
                     <div class="modal-header">
                         <h3 class="modal-title">Copy Invitation</h3>
@@ -68,8 +70,8 @@
                         <form role="form" method="POST" action="">
                             <div class="form-group">
                               <div class="row" ng-show="room.pin && room.spin">                                 
-                                  <div class="col-6 h-100">                                    
-                                    <div style="max-height: 30%">
+                                  <div class="col-12">                                    
+                                    <div>
                                       <p style="font-size: 15px;color: grey;">Send the following invitation text to people who you want to actively participate in the conference. They will be able to make a video or voice call to the conference. </p>
                                     </div>
 
@@ -81,9 +83,11 @@
                                         <i class="fa fa-copy" style="color: white; padding-right: 5px"></i>Copy Invite</button>
                                     </div> 
                                   </div>
-
-                                  <div class="col-6 h-100">                                    
-                                  <div style="max-height: 30%">
+				 
+				 <hr class="w-100"/> 
+ 
+				 <div class="col-12">                                    
+                                  <div>
                                       <p style="font-size: 15px;color: grey;">Send the following invitation text to people who you want to silently participate in the conference. <strong>They will not be able to make a call -but they will be able to view the conference</strong>. </p>
                                     </div>
 
@@ -172,14 +176,11 @@
 
       <!--Exit Room Modal End-->
 
-      <div class="container-fluid mx-1" id="main-container">
+      <div class="container-fluid mx-1" id="main-container" ng-cloak="isMesiboConnected()">
          <div class="row h-100">          
             <!-- Streams Area -->
             
-            <div class="d-none d-flex flex-column col-12" id="streams-area">
-                  <button class="fa fa-arrow-right" id = "next_stream_button" style="position: absolute; color: #00868b; top:200px;right: -10px;" ng-if="streams.length > scope.max_streams_per_page" ng-click={{loadNextStream()}}>
-                  </button>
-
+            <div class="d-none d-flex flex-column col-12" id="streams-area">                  
                    <div class="row" id="grid-container">
                     <div class="col-6" ng-show="room.publish == 1" style="padding-right: 0!important; padding-left: 0!important; background-color: hsl(0, 0%, 0%, 0.4);" ng-class="{'col-12': streams.length == 0, 'col-6': streams.length > 0}">
                           <div class="self-publisher-panel" id="video-publisher-panel" style="border: 2px solid white;">
@@ -420,7 +421,29 @@
         </div>
         <!--=============== File modal end===============-->
     </div>
-          <!-- Chat popup end -->  
+          <!-- Chat popup end --> 
+  
+  <script type="text/javascript">
+      (function() {
+         window.addEventListener('popstate', function(event) {
+          // The popstate event is fired each time when the current history entry changes.
+
+          var r = confirm("Do you want to exit the room?");
+
+          if (r == true) {
+              // Call Back button programmatically as per user confirmation.
+              history.back();
+              exitRoomPrompt();
+          } else {
+              // Stay on the current page.
+              history.pushState(null, null, window.location.pathname);
+          }
+
+          history.pushState(null, null, window.location.pathname);
+
+         }, false);
+        })(); 
+  </script>           
 
 </body>
 
