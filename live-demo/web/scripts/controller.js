@@ -542,7 +542,9 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 	$scope.Mesibo_OnParticipantUpdated = function(all, p) {
 		MesiboLog('Mesibo_OnParticipantsUpdated', all, p);
 		MesiboLog('Mesibo_OnParticipantsUpdated', p.getName(), 'talking', p.isTalking(), p.muteStatus(false, true), p.muteStatus(true, true));
-		$scope.updateStreams(p);
+		if(getStreamFromId(getStreamId(p))){ 
+			$scope.updateStreams(p);
+		}
 		$scope.updateParticipants(p);
 	};
 
@@ -667,9 +669,9 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		}
 	};
 
-	$scope.on_status = function(p, status, video, q) {
+	$scope.on_status = function(p, status) {
 
-		MesiboLog('====> on_status', ' stream ', 'uid', p.getId(), p.getName(), 'local?', p.isLocal(), ' status: 0x' + status.toString(16), video, q);
+		MesiboLog('====> on_status', ' stream ', 'uid', p.getId(), p.getName(), 'local?', p.isLocal(), ' status: 0x' + status.toString(16));
 
 		if (p.isLocal()) {
 			if (MESIBO_CALLSTATUS_CHANNELUP == status) {
@@ -867,7 +869,7 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 	};
 
 	$scope.getStreamFromId = function(pSid) {
-		if (!isValid(pSid) || !(pSid > 0))
+		if (!pSid)
 			return null;
 
 		for (var i = $scope.streams.length - 1; i >= 0; i--) {

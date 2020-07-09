@@ -413,12 +413,16 @@ function createXMLHTTPObject() {
   }
 
   function showLoginScreen() {
-    $('#ModalLoginForm').modal({backdrop: 'static', keyboard: false});
+    var login = document.getElementById('main-login-form');
+    if(login)
+      login.style.display = 'block';
     clearLoginEntry();
   }
 
   function hideLoginScreen() {
-    $('#ModalLoginForm').modal('hide');
+    var login = document.getElementById('main-login-form');
+    if(login)
+      login.style.display = 'none';
     clearLoginEntry();
   }
 
@@ -429,12 +433,16 @@ function createXMLHTTPObject() {
   }
 
   function showJoinRoomScreen() {
-    $('#ModalRoomForm').modal({backdrop: 'static', keyboard: true});
+    var room = document.getElementById('main-room-form');
+    if(room)
+      room.style.display = 'block';
     clearRoomEntry();
   }
 
   function hideJoinRoomScreen() {
-    $('#ModalRoomForm').modal('hide');
+    var room = document.getElementById('main-room-form');
+    if(room)
+      room.style.display = 'none';
     clearRoomEntry();
   }
 
@@ -594,12 +602,9 @@ function createXMLHTTPObject() {
           return -1;
         }
 
-        //MesiboLog(resp);
-        //return;
 
-	hideJoinRoomScreen();
-        //openRoom(resp.gid);
-	openRoom(resp.gid);
+    	hideJoinRoomScreen();
+    	openRoom(resp.gid);
     }
     else {
         MesiboLog(resp);
@@ -882,7 +887,6 @@ function createXMLHTTPObject() {
     if (!isValidString(room.token)) {
       toastr.error('Invalid access token', 'Create Room');
       _resetLoginCredentials();
-      return;
       window.open('login.html', '_self');
       return -1;
     }

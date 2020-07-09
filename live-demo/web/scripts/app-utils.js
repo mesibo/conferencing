@@ -52,8 +52,10 @@ function getScope(){
 };
 
 function _generateStreamId(uid, type){
-	if(!(uid && type))
+	if(!uid || type <0){
+		ErrorLog('_generateStreamId', 'Invalid uid');
 		return -1;
+	}
 
 	return (type << 32) | uid;		
 }
