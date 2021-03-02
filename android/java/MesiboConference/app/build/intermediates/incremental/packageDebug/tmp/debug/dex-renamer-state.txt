@@ -1,0 +1,4 @@
+#Tue Mar 02 21:35:41 IST 2021
+base.0=/code/android/java/mesibo-ui/MesiboConference/app/build/intermediates/dex/debug/mergeDexDebug/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">ConfDemo</string>
+    <string name="login_info_webdemo">This is an open-source demo app built using Mesibo Conferencing APIs. Try the web conferencing demo
+    <a href="https://mesibo.com/livedemo">here</a>
+    </string>
+    <string name="login_info_source_code">Download the entire source code for this demo from  <a href="https://github.com/mesibo/conferencing/tree/master/live-demo">Github</a>
+    </string>
+    <string name="login_title">Login to Mesibo Conferencing Demo</string>
+    <string name="login_prompt_name">Enter Name</string>
+    <string name="login_prompt_name_hint">John Doe</string>
+    <string name="login_prompt_email">Enter Email</string>
+    <string name="login_prompt_email_hint">you@example.com</string>
+    <string name="login_button_next">Next</string>
+    <string name="login_error_default">Error</string>
+    <string name="login_prompt_otp">Enter OTP</string>
+    <string name="login_prompt_enter_otp">Enter OTP sent to </string>
+    <string name="login_error_connection">Check your connection and try again</string>
+    <string name="login_error_otp">Invalid OTP</string>
+    <string name="login_error_email">Invalid Email</string>
+    <string name="join_room_title">Mesibo Conferencing Demo</string>
+    <string name="join_room_existing">Join Exisiting Room</string>
+    <string name="join_room_create">Create New Room</string>
+    <string name="join_room_existing_enter_room_id">Room-ID</string>
+    <string name="join_room_existing_enter_pin">Pin</string>
+    <string name="join_room_existing_error">Unable to join room. Invalid Room-ID or Pin</string>
+    <string name="join_room_enter_button">Join Room</string>
+    <string name="join_room_my_rooms">My Rooms</string>
+    <string name="join_room_create_name">Room Name</string>
+    <string name="join_room_create_button">Create Room</string>
+    <string name="select_room_to_join">Select room to join</string>
+    <string name="conf_limits_description">Since this is a demo application, there are fair usage limits on the duration of the group call. However, you can download the entire source code for this app from <a href="https://github.com/mesibo/conferencing/tree/master/live-demo">mesibo GitHub repository</a>, and configure it using your own mesibo app token to enjoy unlimited call duration.</string>
+    <string name="invite_participant">Invite Participant</string>
+
+</resources>

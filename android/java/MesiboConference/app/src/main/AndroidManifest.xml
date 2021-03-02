@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mesibo.confdemo">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+
+    <application
+        android:name="com.mesibo.confdemo.MainApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:label="ConfDemo"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+<!--        android:theme="@style/Theme.ConfDemo"-->
+<!--        android:theme="@android:style/Theme.NoTitleBar"-->
+        <activity android:name="com.mesibo.confdemo.app.StartUpActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:noHistory="true"
+            android:launchMode="singleTop"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.mesibo.confdemo.app.LoginActivity"
+            android:label="@string/app_name">
+        </activity>
+        <activity
+            android:name="com.mesibo.confdemo.app.JoinRoomActivity"
+            android:label="@string/app_name">
+        </activity>
+        <activity
+            android:name="com.mesibo.confdemo.groupcall.GroupCallActivity"
+            android:label="@string/app_name">
+        </activity>
+
+    </application>
+
+</manifest>

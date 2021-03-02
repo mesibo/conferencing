@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mesibo.confdemo"
+    android:versionCode="1"
+    android:versionName="1.0.0" >
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="30" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.READ_PHONE_STATE"
+        android:required="false" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACTION_MANAGE_OVERLAY_PERMISSION" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" /> <!-- some device having issues with this hence we keeping it options -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:required="false" />
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:required="false" />
+    <uses-permission android:name="android.permission.STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="false" /> <!-- for android -->
+    <!-- <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/> -->
+    <!-- <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS"/> -->
+    <!-- <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" /> -->
+    <!-- <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" /> -->
+    <!-- for Samsung -->
+    <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
+    <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" /> <!-- for htc -->
+    <uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT" /> <!-- for sony -->
+    <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" />
+    <uses-permission android:name="com.sonymobile.home.permission.PROVIDER_INSERT_BADGE" /> <!-- for apex -->
+    <uses-permission android:name="com.anddoes.launcher.permission.UPDATE_COUNT" /> <!-- for solid -->
+    <uses-permission android:name="com.majeur.launcher.permission.UPDATE_BADGE" /> <!-- for huawei -->
+    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
+    <uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" /> <!-- for ZUK -->
+    <uses-permission android:name="android.permission.READ_APP_BADGE" /> <!-- for OPPO -->
+    <uses-permission android:name="com.oppo.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.oppo.launcher.permission.WRITE_SETTINGS" /> <!-- for EvMe -->
+    <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_READ" />
+    <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_WRITE" />
+
+    <application
+        android:name="com.mesibo.confdemo.MainApplication"
+        android:allowBackup="true"
+        android:appComponentFactory="android.support.v4.app.CoreComponentFactory"
+        android:debuggable="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="ConfDemo"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+
+        <!-- android:theme="@style/Theme.ConfDemo" -->
+        <!-- android:theme="@android:style/Theme.NoTitleBar" -->
+        <activity
+            android:name="com.mesibo.confdemo.app.StartUpActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.mesibo.confdemo.app.LoginActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.mesibo.confdemo.app.JoinRoomActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.mesibo.confdemo.groupcall.GroupCallActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.mesibo.uihelper.LoginActivity"
+            android:theme="@style/WelcomeTheme" />
+        <activity
+            android:name="com.mesibo.uihelper.ProductTourActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/WelcomeTheme" />
+
+        <service
+            android:name="com.mesibo.calls.api.ScreenSharingService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="mediaProjection" />
+
+        <receiver
+            android:name="com.mesibo.calls.api.CallsReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name="com.mesibo.calls.api.MesiboCallActivity"
+            android:configChanges="orientation|smallestScreenSize|screenSize|screenLayout"
+            android:screenOrientation="fullUser"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="com.mesibo.calls.api.ui.MesiboDefaultCallActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MesiboCallActivityLight"
+            android:windowActionBar="false"
+            android:windowFullscreen="true"
+            android:windowNoTitle="true"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="com.mesibo.calls.api.ui.MesiboDefaultGroupCallActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MesiboCallActivityLight"
+            android:windowActionBar="false"
+            android:windowFullscreen="true"
+            android:windowNoTitle="true"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <service
+            android:name="com.mesibo.calls.api.MesiboConnectionService"
+            android:label="MesiboConnectionService"
+            android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE" >
+            <intent-filter>
+                <action android:name="android.telecom.ConnectionService" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name="com.mesibo.messaging.MesiboActivity"
+            android:theme="@style/MesiboAppTheme"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name="com.mesibo.messaging.MessagingActivity"
+            android:theme="@style/MesiboAppTheme" />
+        <activity
+            android:name="com.mesibo.messaging.MessagingActivityNew"
+            android:theme="@style/MesiboAppTheme" />
+        <activity
+            android:name="com.mesibo.messaging.CreateNewGroupActivity"
+            android:theme="@style/CreateGroupTheme" />
+        <activity
+            android:name="com.mesibo.mediapicker.AlbumStartActivity"
+            android:label="@string/title_activity_facebook_album"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.mesibo.mediapicker.zoomVuPictureActivity"
+            android:label="@string/title_activity_zoomPictureVu"
+            android:theme="@style/ImageEditorTheme" />
+        <activity
+            android:name="com.mesibo.mediapicker.ImageEditor"
+            android:theme="@style/ImageEditorTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.mesibo.confdemo.provider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <service
+            android:name="com.mesibo.api.MesiboService"
+            android:enabled="true" >
+        </service>
+
+        <receiver
+            android:name="com.mesibo.api.NetworkStateReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.mesibo.api.GenericReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.ACTION_BATTERY_CHANGED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.intent.action.SCREEN_ON" />
+                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="com.mesibo.api.MesiboFileProvider"
+            android:authorities="com.mesibo.confdemo.mesibofileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <activity
+            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!--
+            Service handling Google Sign-In user revocation. For apps that do not integrate with
+            Google Sign-In, this service will never be started.
+        -->
+        <service
+            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+            android:exported="true"
+            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION" />
+
+        <activity
+            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <provider
+            android:name="android.arch.lifecycle.ProcessLifecycleOwnerInitializer"
+            android:authorities="com.mesibo.confdemo.lifecycle-trojan"
+            android:exported="false"
+            android:multiprocess="true" />
+    </application>
+
+</manifest>

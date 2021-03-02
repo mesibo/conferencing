@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/stream_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.mesibo.calls.api.MesiboVideoView
+            android:id="@+id/participant_stream_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <RelativeLayout
+            android:id="@+id/stream_controls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
+
+            <ImageButton
+                android:id="@+id/button_stream_toggle_audio"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_mesibo_mic"
+                android:background="@color/semi_transparent_black"/>
+
+            <ImageButton
+                android:id="@+id/button_stream_toggle_video"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_below="@id/button_stream_toggle_audio"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_mesibo_videocam"
+                android:background="@color/semi_transparent_black"/>
+
+            <ImageButton
+                android:id="@+id/button_stream_toggle_fullscreen"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_below="@id/button_stream_toggle_video"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_baseline_fullscreen_24"
+                android:background="@color/semi_transparent_black"/>
+
+            <ImageButton
+                android:id="@+id/button_stream_message"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_below="@id/button_stream_toggle_fullscreen"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_baseline_mode_comment_24"
+                android:scaleX="-1"
+                android:background="@color/semi_transparent_black"/>
+
+            <ImageButton
+                android:id="@+id/button_stream_hangup"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_below="@id/button_stream_message"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_baseline_close_24"
+                android:background="@color/semi_transparent_black"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/semi_transparent_black">
+
+
+            <TextView
+                android:id="@+id/participant_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:textColor="@color/white" />
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/participant_indicator"
+                android:layout_marginLeft="@dimen/_5sdp"/>
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

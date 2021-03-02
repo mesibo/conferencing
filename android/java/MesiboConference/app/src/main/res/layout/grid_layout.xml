@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/streams_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/call_controls_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/_15sdp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="@dimen/_50sdp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:layout_margin="@dimen/_4sdp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/button_hangup"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/roundedbutton"
+                    android:padding="@dimen/outgoing_video_call_icon_inner_padding"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_mesibo_call_hangup"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_2sdp"
+                android:layout_weight="0"
+                android:background="@drawable/drawable_background_circle"
+                android:gravity="center"
+                android:padding="@dimen/_5sdp">
+
+                <ImageButton
+                    android:id="@+id/button_toggle_audio"
+                    android:alpha="0.3"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_gravity="left"
+                    android:background="@drawable/ic_mesibo_mic_off"
+                    android:contentDescription="@string/toggle_speaker" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_switch_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/outgoing_video_call_icon_margin"
+                android:layout_weight="0"
+                android:background="@drawable/drawable_background_circle"
+                android:gravity="center"
+                android:padding="@dimen/_5sdp">
+
+                <ImageButton
+                    android:id="@+id/button_switch_camera"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_gravity="left"
+                    android:background="@drawable/ic_mesibo_switch_camera"
+                    android:contentDescription="@string/switch_camera" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_toggle_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/outgoing_video_call_icon_margin"
+                android:layout_weight="0"
+                android:background="@drawable/drawable_background_circle"
+                android:gravity="center"
+                android:padding="@dimen/_5sdp">
+
+                <ImageButton
+                    android:id="@+id/button_toggle_video"
+                    android:alpha="0.3"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/ic_mesibo_videocam_off"
+                    android:contentDescription="@string/toggle_camera" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_switch_source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@drawable/drawable_background_circle"
+                android:gravity="center"
+                android:padding="@dimen/_5sdp">
+
+                <ImageButton
+                    android:id="@+id/button_switch_source"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_gravity="left"
+                    android:background="@drawable/ic_mesibo_screen_sharing"
+                    android:contentDescription="@string/switch_source" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_group_message"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@drawable/drawable_background_circle"
+                android:gravity="center"
+                android:padding="@dimen/_5sdp">
+
+                <ImageButton
+                    android:id="@+id/button_group_message"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_gravity="left"
+                    android:background="@drawable/ic_message"
+                    android:contentDescription="@string/switch_source" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_invite_participant"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@drawable/drawable_background_circle"
+                android:gravity="center"
+                android:padding="@dimen/_5sdp">
+
+                <ImageButton
+                    android:id="@+id/button_invite_participant"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_gravity="start"
+                    android:background="@drawable/ic_baseline_person_add_alt_1_24"
+                    android:contentDescription="@string/invite_participant" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/join_room_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="top"
+    android:background="@color/white"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:gravity="top"
+    android:measureAllChildren="false"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:fillViewport="true"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="40.0dip"
+            android:paddingTop="40.0dip"
+            android:paddingRight="40.0dip">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center|left"
+                android:paddingBottom="16.0dip"
+                android:text="@string/join_room_title"
+                android:textColor="@color/black"
+                android:textSize="24.0sp" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkedButton="@id/radio_enter_room"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/radio_enter_room"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onRoomRadioButtonClicked"
+                    android:text="@string/join_room_existing" />
+
+                <RadioButton
+                    android:id="@+id/radio_create_room"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onRoomRadioButtonClicked"
+                    android:text="@string/join_room_create" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_height="wrap_content">
+                <CheckBox
+                    android:id="@+id/checkbox_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Audio"
+                    android:onClick="onStreamCheckboxClicked"
+                    android:checked="true"/>
+                <CheckBox
+                    android:id="@+id/checkbox_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Video"
+                    android:onClick="onStreamCheckboxClicked"
+                    android:checked="true"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/existing_room"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="24.0dip"
+                android:selectAllOnFocus="true">
+
+                <TextView
+                    android:id="@+id/enter_room_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/join_room_existing_enter_room_id"
+                    android:textSize="12.0sp" />
+
+                <EditText
+                    android:id="@+id/room_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/grey"
+                    android:focusable="true"
+                    android:focusedByDefault="true"
+                    android:inputType="numberDecimal"
+                    android:longClickable="false"
+                    android:minWidth="200.0dip"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/grey"
+                    android:textSize="24.0sp"
+                    android:theme="@style/AppDarkTheme" />
+
+                <TextView
+                    android:id="@+id/enter_room_pin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/join_room_existing_enter_pin"
+                    android:textSize="12.0sp" />
+
+                <EditText
+                    android:id="@+id/room_pin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/grey"
+                    android:focusable="true"
+                    android:inputType="numberDecimal"
+                    android:longClickable="false"
+                    android:minWidth="200.0dip"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/grey"
+                    android:textSize="24.0sp"
+                    android:theme="@style/AppDarkTheme" />
+
+                <TextView
+                    android:id="@+id/error_enter_room"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10.0dip"
+                    android:text="@string/join_room_existing_error"
+                    android:textColor="@color/errorTextColor"
+                    android:visibility="gone"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/button_enter_room"
+                        style="@style/borderlessButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_weight="1"
+                        android:background="@color/mesibo"
+                        android:onClick="onEnterRoom"
+                        android:text="@string/join_room_enter_button"
+                        android:textColor="@color/white"
+                        android:textSize="14.0sp" />
+
+                    <Button
+                        android:id="@+id/button_show_my_rooms"
+                        style="@style/borderlessButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginTop="20dp"
+                        android:layout_weight="1"
+                        android:background="@color/mesibo"
+                        android:onClick="onShowRooms"
+                        android:text="@string/join_room_my_rooms"
+                        android:textColor="@color/white"
+                        android:textSize="14.0sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/my_rooms"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|left"
+                    android:paddingTop="16.0dip"
+                    android:paddingBottom="8dp"
+                    android:text="@string/select_room_to_join"
+                    android:textColor="@color/black"
+                    android:textSize="20.0sp" />
+
+                <ListView
+                    android:id="@+id/list_my_rooms"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_baseline_arrow_back_24">
+                </ImageButton>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/create_room"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="24.0dip"
+                android:selectAllOnFocus="true"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/enter_room_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/join_room_create_name"
+                    android:textSize="12.0sp" />
+
+                <EditText
+                    android:id="@+id/room_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/grey"
+                    android:focusedByDefault="true"
+                    android:inputType="text"
+                    android:longClickable="false"
+                    android:minWidth="200.0dip"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/grey"
+                    android:textSize="24.0sp"
+                    android:theme="@style/AppDarkTheme" />
+
+                <TextView
+                    android:id="@+id/choose_resolution"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Resolution"
+                    android:textSize="12.0sp" />
+
+                <Spinner
+                    android:id="@+id/choose_resolution_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown"/>
+
+                <Button
+                    android:id="@+id/button_create_room"
+                    style="@style/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/mesibo"
+                    android:onClick="onCreateRoom"
+                    android:text="@string/join_room_create_button"
+                    android:textColor="@color/white"
+                    android:textSize="14.0sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/join_room_progressbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:background="#40ffffff"
+                android:visibility="gone" >
+
+                <ProgressBar
+                    android:id="@+id/circular_Progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+                </ProgressBar>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
