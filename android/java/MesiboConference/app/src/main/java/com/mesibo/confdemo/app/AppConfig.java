@@ -39,7 +39,7 @@ package com.mesibo.confdemo.app;
  * https://mesibo.com/documentation/api/conferencing
  *
  * Source Code Repository
- * https://github.com/mesibo/conferencing/tree/master/live-demo
+ * https://github.com/mesibo/conferencing
  *
  * Web Demo
  * https://mesibo.com/livedemo

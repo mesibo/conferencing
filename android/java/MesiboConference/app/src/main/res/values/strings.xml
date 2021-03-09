@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">ConfDemo</string>
-    <string name="login_info_webdemo">This is an open-source demo app built using Mesibo Conferencing APIs. Try the web conferencing demo
-    <a href="https://mesibo.com/livedemo">here</a>
-    </string>
-    <string name="login_info_source_code">Download the entire source code for this demo from  <a href="https://github.com/mesibo/conferencing/tree/master/live-demo">Github</a>
+    <string name="login_info_webdemo">This is an open-source demo app built using Mesibo Conferencing APIs for Android. Try the web conferencing demo <a href="https://mesibo.com/livedemo">here</a></string>
+    <string name="login_info_source_code">You can download the entire source code from  <a href="https://github.com/mesibo/conferencing">Github</a>
     </string>
     <string name="login_title">Login to Mesibo Conferencing Demo</string>
     <string name="login_prompt_name">Enter Name</string>

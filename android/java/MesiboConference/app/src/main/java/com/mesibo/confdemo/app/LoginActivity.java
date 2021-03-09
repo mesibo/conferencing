@@ -40,7 +40,7 @@ package com.mesibo.confdemo.app;
  * https://mesibo.com/documentation/api/conferencing
  *
  * Source Code Repository
- * https://github.com/mesibo/conferencing/tree/master/live-demo
+ * https://github.com/mesibo/conferencing
  */
 
 import android.os.Bundle;
@@ -88,6 +88,14 @@ public class LoginActivity extends AppCompatActivity {
                 else
                     showError(getString(R.string.login_error_email));
 
+                return;
+            }
+
+            if (!response.result.equalsIgnoreCase("OK")) {
+
+                if(response.op.equals("joingroup")){
+                    showError(getString(R.string.join_room_existing_error));
+                }
                 return;
             }
 

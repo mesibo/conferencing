@@ -36,7 +36,7 @@ package com.mesibo.confdemo.messaging;
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/conferencing/tree/master/live-demo
+ * https://github.com/mesibo/conferencing
  *
  */
 

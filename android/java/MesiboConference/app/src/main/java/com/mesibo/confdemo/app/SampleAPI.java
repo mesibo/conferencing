@@ -39,7 +39,7 @@ package com.mesibo.confdemo.app;
  * https://mesibo.com/documentation/api/conferencing
  *
  * Source Code Repository
- * https://github.com/mesibo/conferencing/tree/master/live-demo
+ * https://github.com/mesibo/conferencing
  */
 
 import android.content.Context;
@@ -209,18 +209,15 @@ public class SampleAPI {
             return false;
         }
 
-        if(response.result.equalsIgnoreCase("OK"))
-            return true;
-
-        if(response.error == null)
-            return true;
-
-        if (response.error.equalsIgnoreCase("AUTHFAIL")) {
+        if (response.error != null && response.result.equalsIgnoreCase("AUTHFAIL")) {
             forceLogout();
             return false;
         }
 
-        return true;
+        if(response.result.equalsIgnoreCase("OK"))
+            return true;
+        else
+            return false;
 
     }
 
