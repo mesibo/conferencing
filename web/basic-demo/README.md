@@ -305,7 +305,7 @@ Call `streamFromScreen()` when you need to share your stream
 function streamFromCamera() {
     console.log('streamFromCamera');
 
-    publisher.setVideoSource(STREAM_CAMERA);
+    publisher.setVideoSource(MESIBOCALL_VIDEOSOURCE_CAMERADEFAULT);
     publisher.call(true, true, callInProgressListener);
     publisher.setName(selected_user.name);
 
@@ -314,7 +314,7 @@ function streamFromCamera() {
 function streamFromScreen() {
     console.log('streamFromScreen');
 
-    publisher.setVideoSource(STREAM_SCREEN);
+    publisher.setVideoSource(MESIBOCALL_VIDEOSOURCE_SCREEN);
     publisher.call( true, true, callInProgressListener);
     publisher.setName(selected_user.name +"'s screen");
 

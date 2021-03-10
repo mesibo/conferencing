@@ -4,13 +4,14 @@
 * You can try an advanced conferencing demo, with more features at 
 * https://mesibo.com/livedemo
 *
-* To use the basic demo, 
-* First create a group, set permissions and then add members
-* See https://mesibo.com/get-started
+* To use this basic demo, 
+* First create a mesibo group 
+* and set DEMO_GROUP_ID to the group-id you obtained 
 *
-* Configure the group and app details below 
+* Then, create users with the same appid as MESIBO_APP_ID 
+* and add them as members to the group created earlier
 *
-* Documentation: https://mesibo.com/documentation/conferencing
+* Refer to Documentation: https://mesibo.com/documentation/api/conferencing
 */
 
 const DEMO_GROUP_ID = 0;
@@ -61,8 +62,6 @@ var globalCallListener = null;
 
 var streams = [];
 const MAX_STREAMS_COUNT = 4;
-const STREAM_CAMERA = 1;
-const STREAM_SCREEN = 2;
 
 function MesiboNotify() {
 }
@@ -168,6 +167,7 @@ GroupCallInProgressListener.prototype.MesiboGroupcall_OnHangup = function(p, rea
 	if(p.isLocal()) {
 		return;
 	}
+	
 	for(var i = 0; i < streams.length; i++){
 		if ( streams[i].getId() === p.getId()) {
 			streams[i] = null; //Free up slot
@@ -242,7 +242,7 @@ function login(user_index){
 function streamFromCamera() {
 	console.log('streamFromCamera');
 
-	publisher.setVideoSource(STREAM_CAMERA);
+	publisher.setVideoSource(MESIBOCALL_VIDEOSOURCE_CAMERADEFAULT);
 	publisher.call(true, true, callInProgressListener);
 	publisher.setName(selected_user.name);
 
@@ -251,7 +251,7 @@ function streamFromCamera() {
 function streamFromScreen() {
 	console.log('streamFromScreen');
 
-	publisher.setVideoSource(STREAM_SCREEN);
+	publisher.setVideoSource(MESIBOCALL_VIDEOSOURCE_SCREEN);
 	publisher.call( true, true, callInProgressListener);
 	publisher.setName(selected_user.name +"'s screen");
 
