@@ -32,7 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * Documentation
- * https://mesibo.com/documentation/
+ * https://mesibo.com/documentation/api/conferencing
  *
  * Source Code Repository
  * https://github.com/mesibo/conferencing/tree/master/live-demo/web

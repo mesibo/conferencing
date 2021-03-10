@@ -301,14 +301,14 @@ On this demo application, you either publish through a camera or share a screen.
     o.name = $scope.room.name;
     o.groupid = $scope.room.gid;
 
-    o.source = STREAM_CAMERA;
+    o.source = MESIBOCALL_VIDEOSOURCE_CAMERADEFAULT;
     var init_audio = $scope.room.init.audio;
     var init_video = $scope.room.init.video;
     var stream_element_id = 'video-publisher';
 
 
     if (isValid(stream.getType) && stream.getType() > 0) {
-        o.source = STREAM_SCREEN;
+        o.source = MESIBOCALL_VIDEOSOURCE_SCREEN;
         init_audio = false;
         stream_element_id =   null;
     }

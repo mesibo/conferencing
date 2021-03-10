@@ -32,7 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * Documentation
- * https://mesibo.com/documentation/
+ * https://mesibo.com/documentation/api/conferencing
  *
  * Source Code Repository
  * https://github.com/mesibo/conferencing/tree/master/live-demo/web
@@ -95,18 +95,6 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 	var MAX_HEIGHT_SPEAKER_PREVIEW = 104; 
 	$scope.participant_last_talking_ts = {};
 
-	const MESIBOCALL_HANGUP_REASON_USER = 0;
-	const MESIBOCALL_HANGUP_REASON_REMOTE = 1;
-	const MESIBOCALL_HANGUP_REASON_ERROR = -1;
-
-
-	const STREAM_CAMERA = 1;
-	const STREAM_SCREEN = 2;
-
-
-	$scope.participant_type_publisher = 1;
-	$scope.participant_type_subscriber = 2;
-
 	$scope.mesibo_connection_status = 0;
 
 	$scope.streams = []; //All the available streams the grid
@@ -153,7 +141,7 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 	$scope.participant_list_placeholder = 'Participants yet to join';
 	$scope.popup_grid_map = {};
 
-	$scope.toggle_source = STREAM_CAMERA;
+	$scope.toggle_source = MESIBOCALL_VIDEOSOURCE_CAMERADEFAULT;
 	$scope.publisher = {'isConnected': false, 'streamOptions': false, 'isPublished': false};
 	$scope.local_screens = [];
 	$scope.local_screen_count = 0;
@@ -867,7 +855,7 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		if(!p)
 			return false;
 
-		var ele = p.getPlayer();
+		var ele = p.getVideoView();
 		if(!ele)
 			return false;
 
@@ -1144,14 +1132,14 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		if(!focus)
 			return;		
 
-		var ele = focus.getPlayer();
+		var ele = focus.getVideoView();
 		if(!ele)
 			return;
 
 		var w = ele.videoWidth;
 		var h = ele.videoHeight;
 
-		//TODO: using timeouts here is hackly. Use onloadedmetadata event or similar 
+		//TODO: using timeouts here is hacky. Use onloadedmetadata event or similar 
 		if(!(w && h)){
 			setTimeout(function() { $scope.on_focused_setvideo(true); }, 50);
 			return;
@@ -2413,7 +2401,7 @@ $scope.initMesibo = function() {
 			var init_video = $scope.room.init.video;
 		}
 		$scope.publisher = $scope.live.createPublisher(0);
-		$scope.publisher.setVideoSource(STREAM_CAMERA); 
+		$scope.publisher.setVideoSource(MESIBOCALL_VIDEOSOURCE_CAMERADEFAULT); 
 		
 		$scope.publisher.call();
 		if (isValid($scope.publisher) && !$scope.publisher.isPublished && $scope.room.publish == 1) {
@@ -2441,14 +2429,14 @@ $scope.publish = function(stream) {
 	o.name = $scope.room.name;
 	o.groupid = $scope.room.gid;
 
-	o.source = STREAM_CAMERA;
+	o.source = MESIBOCALL_VIDEOSOURCE_CAMERADEFAULT;
 	var init_audio = $scope.room.init.audio;
 	var init_video = $scope.room.init.video;
 	var stream_element_id = 'video-publisher';
 
 
 	if (isValid(stream.getType) && stream.getType() > 0) {
-		o.source = STREAM_SCREEN;
+		o.source = MESIBOCALL_VIDEOSOURCE_SCREEN;
 		init_audio = false;
 		stream_element_id =   null;
 	}
@@ -2529,7 +2517,7 @@ $scope.connectStream = function(o, stream, element_id, iAudio, iVideo) {
 
 $scope.streamFromCamera = function() {
 	MesiboLog('streamFromCamera');
-	// $scope.toggle_source = STREAM_CAMERA;
+	// $scope.toggle_source = MESIBOCALL_VIDEOSOURCE_CAMERADEFAULT;
 	$scope.publish($scope.publisher);
 };
 
@@ -2548,7 +2536,7 @@ $scope.getLocalScreen = function(screen_id){
 
 	//No existing screen with that id, create & return a new one
 	screen = $scope.live.createPublisher(screen_id);
-	screen.setVideoSource(STREAM_SCREEN);
+	screen.setVideoSource(MESIBOCALL_VIDEOSOURCE_SCREEN);
 	if(!screen)
 		return null;
 
@@ -3019,15 +3007,11 @@ $scope.onFullScreenChange = function() {
 
 };
 
-$scope.copyInviteText = function(publisher_type) {
-	MesiboLog('copyInviteText', publisher_type);
+$scope.copyInviteText = function(invitePublisher) {
+	MesiboLog('copyInviteText');
 
 	var element_id;
-	if (publisher_type == $scope.participant_type_publisher)
-		element_id = 'invite-text-publisher';
-
-	if (publisher_type == $scope.participant_type_subscriber)
-		element_id = 'invite-text-subscriber';
+	element_id = invitePublisher ? 'invite-text-publisher' : 'invite-text-subscriber';
 
 	MesiboLog(element_id);
 	var invite_text = document.getElementById(element_id);
