@@ -1,0 +1,511 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		88836A3A25F920210014D79F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88836A3925F920210014D79F /* CoreServices.framework */; };
+		88904A3225FDD00E002FA05A /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88904A3125FDD00E002FA05A /* MetalKit.framework */; };
+		88904A3425FDD014002FA05A /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88904A3325FDD014002FA05A /* Metal.framework */; };
+		88904A3625FDD020002FA05A /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88904A3525FDD020002FA05A /* Network.framework */; };
+		88904A4525FF2AB1002FA05A /* CreateRoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88904A4425FF2AB1002FA05A /* CreateRoomViewController.m */; };
+		88904A4925FF41A4002FA05A /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88904A4825FF41A4002FA05A /* WelcomeViewController.m */; };
+		88D6B31725FB22780081D557 /* ParticipantViewHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 88D6B31625FB22780081D557 /* ParticipantViewHolder.m */; };
+		88EA673825F88EDC00612291 /* mesibocall.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88EA673725F88EDC00612291 /* mesibocall.framework */; };
+		88EA674125F89C4600612291 /* GroupCallView.m in Sources */ = {isa = PBXBuildFile; fileRef = 88EA673E25F89C4500612291 /* GroupCallView.m */; };
+		88EA674225F89C4600612291 /* MesiboGroupCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88EA674025F89C4600612291 /* MesiboGroupCallController.m */; };
+		88EA674525F89D8500612291 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88EA674425F89D8500612291 /* WebRTC.framework */; };
+		88EA674825F89DE900612291 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F96EC825F2094D003BEC88 /* AVKit.framework */; };
+		88EA674A25F89DEF00612291 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88EA674925F89DEF00612291 /* AudioToolbox.framework */; };
+		88EA674C25F89DF500612291 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88EA674B25F89DF500612291 /* VideoToolbox.framework */; };
+		88EA674F25F89E2300612291 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88EA674E25F89E2300612291 /* GLKit.framework */; };
+		88F96E8425F0A922003BEC88 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F96E8325F0A922003BEC88 /* AppDelegate.m */; };
+		88F96E8A25F0A922003BEC88 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F96E8925F0A922003BEC88 /* LoginViewController.m */; };
+		88F96E8D25F0A922003BEC88 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88F96E8B25F0A922003BEC88 /* Main.storyboard */; };
+		88F96E8F25F0A925003BEC88 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88F96E8E25F0A925003BEC88 /* Assets.xcassets */; };
+		88F96E9225F0A925003BEC88 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88F96E9025F0A925003BEC88 /* LaunchScreen.storyboard */; };
+		88F96E9525F0A925003BEC88 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F96E9425F0A925003BEC88 /* main.m */; };
+		88F96E9F25F1C4A1003BEC88 /* JoinRoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F96E9E25F1C4A1003BEC88 /* JoinRoomViewController.m */; };
+		88F96EA425F1CAF8003BEC88 /* SampleAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F96EA225F1CAF8003BEC88 /* SampleAPI.m */; };
+		88F96EA825F1CC20003BEC88 /* NSDictionary+NilObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F96EA725F1CC20003BEC88 /* NSDictionary+NilObject.m */; };
+		88F96EAD25F1D589003BEC88 /* mesibo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F96EAC25F1D588003BEC88 /* mesibo.framework */; };
+		88F96EB125F1D784003BEC88 /* AppAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F96EB025F1D784003BEC88 /* AppAlert.m */; };
+		88F96EB525F20895003BEC88 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F96EB425F20895003BEC88 /* CoreTelephony.framework */; };
+		88F96EB725F208A4003BEC88 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F96EB625F208A4003BEC88 /* Photos.framework */; };
+		88F96EBA25F208D1003BEC88 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F96EB925F208D1003BEC88 /* CoreMedia.framework */; };
+		88F96EBC25F208E2003BEC88 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F96EBB25F208E2003BEC88 /* AssetsLibrary.framework */; };
+		88F96EBE25F208EA003BEC88 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F96EBD25F208EA003BEC88 /* SystemConfiguration.framework */; };
+		88F96EC325F20914003BEC88 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F96EC225F20914003BEC88 /* AddressBook.framework */; };
+		88F96EC625F20939003BEC88 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F96EC525F20939003BEC88 /* AVFoundation.framework */; };
+		88F96ED325F209E6003BEC88 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F96ED125F209BF003BEC88 /* libc++.tbd */; };
+		88F96ED525F209F1003BEC88 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F96ECC25F2097B003BEC88 /* libsqlite3.tbd */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		88836A3925F920210014D79F /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		88904A3125FDD00E002FA05A /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		88904A3325FDD014002FA05A /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		88904A3525FDD020002FA05A /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
+		88904A4325FF2AB1002FA05A /* CreateRoomViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CreateRoomViewController.h; sourceTree = "<group>"; };
+		88904A4425FF2AB1002FA05A /* CreateRoomViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CreateRoomViewController.m; sourceTree = "<group>"; };
+		88904A4725FF41A4002FA05A /* WelcomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
+		88904A4825FF41A4002FA05A /* WelcomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
+		88D6B31525FB22780081D557 /* ParticipantViewHolder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParticipantViewHolder.h; sourceTree = "<group>"; };
+		88D6B31625FB22780081D557 /* ParticipantViewHolder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ParticipantViewHolder.m; sourceTree = "<group>"; };
+		88EA673725F88EDC00612291 /* mesibocall.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = mesibocall.framework; sourceTree = "<group>"; };
+		88EA673D25F89C4500612291 /* GroupCallView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupCallView.h; sourceTree = "<group>"; };
+		88EA673E25F89C4500612291 /* GroupCallView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupCallView.m; sourceTree = "<group>"; };
+		88EA673F25F89C4500612291 /* MesiboGroupCallController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MesiboGroupCallController.h; sourceTree = "<group>"; };
+		88EA674025F89C4600612291 /* MesiboGroupCallController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MesiboGroupCallController.m; sourceTree = "<group>"; };
+		88EA674425F89D8500612291 /* WebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebRTC.framework; sourceTree = "<group>"; };
+		88EA674925F89DEF00612291 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		88EA674B25F89DF500612291 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		88EA674E25F89E2300612291 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		88F96E7F25F0A922003BEC88 /* confdemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = confdemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		88F96E8225F0A922003BEC88 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		88F96E8325F0A922003BEC88 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		88F96E8825F0A922003BEC88 /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		88F96E8925F0A922003BEC88 /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		88F96E8C25F0A922003BEC88 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		88F96E8E25F0A925003BEC88 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		88F96E9125F0A925003BEC88 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		88F96E9325F0A925003BEC88 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		88F96E9425F0A925003BEC88 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		88F96E9D25F1C4A1003BEC88 /* JoinRoomViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JoinRoomViewController.h; sourceTree = "<group>"; };
+		88F96E9E25F1C4A1003BEC88 /* JoinRoomViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JoinRoomViewController.m; sourceTree = "<group>"; };
+		88F96EA225F1CAF8003BEC88 /* SampleAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleAPI.m; sourceTree = "<group>"; };
+		88F96EA325F1CAF8003BEC88 /* SampleAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleAPI.h; sourceTree = "<group>"; };
+		88F96EA625F1CC20003BEC88 /* NSDictionary+NilObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+NilObject.h"; sourceTree = "<group>"; };
+		88F96EA725F1CC20003BEC88 /* NSDictionary+NilObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+NilObject.m"; sourceTree = "<group>"; };
+		88F96EAC25F1D588003BEC88 /* mesibo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = mesibo.framework; sourceTree = "<group>"; };
+		88F96EAF25F1D784003BEC88 /* AppAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppAlert.h; sourceTree = "<group>"; };
+		88F96EB025F1D784003BEC88 /* AppAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppAlert.m; sourceTree = "<group>"; };
+		88F96EB425F20895003BEC88 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		88F96EB625F208A4003BEC88 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		88F96EB925F208D1003BEC88 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		88F96EBB25F208E2003BEC88 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		88F96EBD25F208EA003BEC88 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		88F96EBF25F208F1003BEC88 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		88F96EC225F20914003BEC88 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		88F96EC525F20939003BEC88 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		88F96EC825F2094D003BEC88 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		88F96ECC25F2097B003BEC88 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		88F96ECE25F2098A003BEC88 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		88F96ED125F209BF003BEC88 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		88F96ED725F20A1A003BEC88 /* libz.1.1.3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.1.3.tbd; path = usr/lib/libz.1.1.3.tbd; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		88F96E7C25F0A922003BEC88 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				88EA674F25F89E2300612291 /* GLKit.framework in Frameworks */,
+				88EA674C25F89DF500612291 /* VideoToolbox.framework in Frameworks */,
+				88F96EBA25F208D1003BEC88 /* CoreMedia.framework in Frameworks */,
+				88EA674A25F89DEF00612291 /* AudioToolbox.framework in Frameworks */,
+				88F96EC625F20939003BEC88 /* AVFoundation.framework in Frameworks */,
+				88EA673825F88EDC00612291 /* mesibocall.framework in Frameworks */,
+				88EA674825F89DE900612291 /* AVKit.framework in Frameworks */,
+				88F96EC325F20914003BEC88 /* AddressBook.framework in Frameworks */,
+				88F96EB525F20895003BEC88 /* CoreTelephony.framework in Frameworks */,
+				88904A3425FDD014002FA05A /* Metal.framework in Frameworks */,
+				88904A3225FDD00E002FA05A /* MetalKit.framework in Frameworks */,
+				88836A3A25F920210014D79F /* CoreServices.framework in Frameworks */,
+				88F96EAD25F1D589003BEC88 /* mesibo.framework in Frameworks */,
+				88F96ED325F209E6003BEC88 /* libc++.tbd in Frameworks */,
+				88F96EB725F208A4003BEC88 /* Photos.framework in Frameworks */,
+				88F96EBE25F208EA003BEC88 /* SystemConfiguration.framework in Frameworks */,
+				88F96ED525F209F1003BEC88 /* libsqlite3.tbd in Frameworks */,
+				88EA674525F89D8500612291 /* WebRTC.framework in Frameworks */,
+				88F96EBC25F208E2003BEC88 /* AssetsLibrary.framework in Frameworks */,
+				88904A3625FDD020002FA05A /* Network.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		88F96E7625F0A922003BEC88 = {
+			isa = PBXGroup;
+			children = (
+				88F96EAB25F1D531003BEC88 /* MesiboFrameworks */,
+				88F96E8125F0A922003BEC88 /* confdemo */,
+				88F96E8025F0A922003BEC88 /* Products */,
+				88F96EB325F20895003BEC88 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		88F96E8025F0A922003BEC88 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				88F96E7F25F0A922003BEC88 /* confdemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		88F96E8125F0A922003BEC88 /* confdemo */ = {
+			isa = PBXGroup;
+			children = (
+				88F96EAF25F1D784003BEC88 /* AppAlert.h */,
+				88F96EB025F1D784003BEC88 /* AppAlert.m */,
+				88F96E8225F0A922003BEC88 /* AppDelegate.h */,
+				88F96E8325F0A922003BEC88 /* AppDelegate.m */,
+				88F96E8E25F0A925003BEC88 /* Assets.xcassets */,
+				88904A4325FF2AB1002FA05A /* CreateRoomViewController.h */,
+				88904A4425FF2AB1002FA05A /* CreateRoomViewController.m */,
+				88EA673D25F89C4500612291 /* GroupCallView.h */,
+				88EA673E25F89C4500612291 /* GroupCallView.m */,
+				88F96E9325F0A925003BEC88 /* Info.plist */,
+				88F96E9D25F1C4A1003BEC88 /* JoinRoomViewController.h */,
+				88F96E9E25F1C4A1003BEC88 /* JoinRoomViewController.m */,
+				88F96E9025F0A925003BEC88 /* LaunchScreen.storyboard */,
+				88F96E8825F0A922003BEC88 /* LoginViewController.h */,
+				88F96E8925F0A922003BEC88 /* LoginViewController.m */,
+				88F96E9425F0A925003BEC88 /* main.m */,
+				88F96E8B25F0A922003BEC88 /* Main.storyboard */,
+				88EA673F25F89C4500612291 /* MesiboGroupCallController.h */,
+				88EA674025F89C4600612291 /* MesiboGroupCallController.m */,
+				88F96EA625F1CC20003BEC88 /* NSDictionary+NilObject.h */,
+				88F96EA725F1CC20003BEC88 /* NSDictionary+NilObject.m */,
+				88D6B31525FB22780081D557 /* ParticipantViewHolder.h */,
+				88D6B31625FB22780081D557 /* ParticipantViewHolder.m */,
+				88F96EA325F1CAF8003BEC88 /* SampleAPI.h */,
+				88F96EA225F1CAF8003BEC88 /* SampleAPI.m */,
+				88904A4725FF41A4002FA05A /* WelcomeViewController.h */,
+				88904A4825FF41A4002FA05A /* WelcomeViewController.m */,
+			);
+			path = confdemo;
+			sourceTree = "<group>";
+		};
+		88F96EAB25F1D531003BEC88 /* MesiboFrameworks */ = {
+			isa = PBXGroup;
+			children = (
+				88EA674425F89D8500612291 /* WebRTC.framework */,
+				88EA673725F88EDC00612291 /* mesibocall.framework */,
+				88F96EAC25F1D588003BEC88 /* mesibo.framework */,
+			);
+			path = MesiboFrameworks;
+			sourceTree = "<group>";
+		};
+		88F96EB325F20895003BEC88 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				88904A3525FDD020002FA05A /* Network.framework */,
+				88904A3325FDD014002FA05A /* Metal.framework */,
+				88904A3125FDD00E002FA05A /* MetalKit.framework */,
+				88836A3925F920210014D79F /* CoreServices.framework */,
+				88EA674E25F89E2300612291 /* GLKit.framework */,
+				88EA674B25F89DF500612291 /* VideoToolbox.framework */,
+				88EA674925F89DEF00612291 /* AudioToolbox.framework */,
+				88F96ED725F20A1A003BEC88 /* libz.1.1.3.tbd */,
+				88F96ED125F209BF003BEC88 /* libc++.tbd */,
+				88F96ECE25F2098A003BEC88 /* libsqlite3.0.tbd */,
+				88F96ECC25F2097B003BEC88 /* libsqlite3.tbd */,
+				88F96EC825F2094D003BEC88 /* AVKit.framework */,
+				88F96EC525F20939003BEC88 /* AVFoundation.framework */,
+				88F96EC225F20914003BEC88 /* AddressBook.framework */,
+				88F96EBF25F208F1003BEC88 /* MobileCoreServices.framework */,
+				88F96EBD25F208EA003BEC88 /* SystemConfiguration.framework */,
+				88F96EBB25F208E2003BEC88 /* AssetsLibrary.framework */,
+				88F96EB925F208D1003BEC88 /* CoreMedia.framework */,
+				88F96EB625F208A4003BEC88 /* Photos.framework */,
+				88F96EB425F20895003BEC88 /* CoreTelephony.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		88F96E7E25F0A922003BEC88 /* confdemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88F96E9825F0A925003BEC88 /* Build configuration list for PBXNativeTarget "confdemo" */;
+			buildPhases = (
+				88F96E7B25F0A922003BEC88 /* Sources */,
+				88F96E7C25F0A922003BEC88 /* Frameworks */,
+				88F96E7D25F0A922003BEC88 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = confdemo;
+			productName = confdemo;
+			productReference = 88F96E7F25F0A922003BEC88 /* confdemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		88F96E7725F0A922003BEC88 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1240;
+				TargetAttributes = {
+					88F96E7E25F0A922003BEC88 = {
+						CreatedOnToolsVersion = 12.4;
+					};
+				};
+			};
+			buildConfigurationList = 88F96E7A25F0A922003BEC88 /* Build configuration list for PBXProject "confdemo" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 88F96E7625F0A922003BEC88;
+			productRefGroup = 88F96E8025F0A922003BEC88 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				88F96E7E25F0A922003BEC88 /* confdemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		88F96E7D25F0A922003BEC88 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				88F96E9225F0A925003BEC88 /* LaunchScreen.storyboard in Resources */,
+				88F96E8F25F0A925003BEC88 /* Assets.xcassets in Resources */,
+				88F96E8D25F0A922003BEC88 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		88F96E7B25F0A922003BEC88 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				88F96E8A25F0A922003BEC88 /* LoginViewController.m in Sources */,
+				88F96E8425F0A922003BEC88 /* AppDelegate.m in Sources */,
+				88EA674225F89C4600612291 /* MesiboGroupCallController.m in Sources */,
+				88F96EA425F1CAF8003BEC88 /* SampleAPI.m in Sources */,
+				88F96E9525F0A925003BEC88 /* main.m in Sources */,
+				88904A4925FF41A4002FA05A /* WelcomeViewController.m in Sources */,
+				88F96EA825F1CC20003BEC88 /* NSDictionary+NilObject.m in Sources */,
+				88D6B31725FB22780081D557 /* ParticipantViewHolder.m in Sources */,
+				88F96EB125F1D784003BEC88 /* AppAlert.m in Sources */,
+				88904A4525FF2AB1002FA05A /* CreateRoomViewController.m in Sources */,
+				88EA674125F89C4600612291 /* GroupCallView.m in Sources */,
+				88F96E9F25F1C4A1003BEC88 /* JoinRoomViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		88F96E8B25F0A922003BEC88 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				88F96E8C25F0A922003BEC88 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		88F96E9025F0A925003BEC88 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				88F96E9125F0A925003BEC88 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		88F96E9625F0A925003BEC88 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		88F96E9725F0A925003BEC88 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		88F96E9925F0A925003BEC88 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HXKDD24ZQ6;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/confdemo/MesiboFrameworks",
+					"$(PROJECT_DIR)/MesiboFrameworks",
+				);
+				INFOPLIST_FILE = confdemo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mesibo.confdemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		88F96E9A25F0A925003BEC88 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HXKDD24ZQ6;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/confdemo/MesiboFrameworks",
+					"$(PROJECT_DIR)/MesiboFrameworks",
+				);
+				INFOPLIST_FILE = confdemo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mesibo.confdemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		88F96E7A25F0A922003BEC88 /* Build configuration list for PBXProject "confdemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				88F96E9625F0A925003BEC88 /* Debug */,
+				88F96E9725F0A925003BEC88 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		88F96E9825F0A925003BEC88 /* Build configuration list for PBXNativeTarget "confdemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				88F96E9925F0A925003BEC88 /* Debug */,
+				88F96E9A25F0A925003BEC88 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 88F96E7725F0A922003BEC88 /* Project object */;
+}
