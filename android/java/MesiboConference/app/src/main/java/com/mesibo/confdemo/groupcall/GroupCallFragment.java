@@ -47,41 +47,44 @@ package com.mesibo.confdemo.groupcall;
  */
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import com.mesibo.api.Mesibo;
-import com.mesibo.confdemo.MainApplication;
-import com.mesibo.messaging.MesiboUI;
 import com.mesibo.calls.api.MesiboCall;
 import com.mesibo.calls.api.MesiboCallActivity;
 import com.mesibo.confdemo.R;
 import com.mesibo.confdemo.app.AppConfig;
 import com.mesibo.confdemo.app.SampleAPI;
+import com.mesibo.confdemo.app.UIManager;
+import com.mesibo.messaging.MesiboUI;
+import com.mesibo.messaging.MesiboUserListFragment;
 
-import static org.webrtc.ContextUtils.getApplicationContext;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 // Refer to https://mesibo.com/documentation/api/conferencing/listeners
 
-public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallListener, MesiboCall.GroupCallInProgressListener, Mesibo.MessageListener, View.OnClickListener, ParticipantViewHolder.Listener {
+public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallListener, MesiboCall.GroupCallInProgressListener, Mesibo.MessageListener, View.OnClickListener, ParticipantViewHolder.Listener, Mesibo.UIHelperListner{
     public static final String TAG = "MesiboCallFragment";
     private long mGid = 0;
     private Mesibo.UserProfile mGroupProfile = null;
@@ -137,6 +140,8 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
         // Message Listener has been implemented here
         Mesibo.addListener(this);
 
+
+
         mGridView = new GroupCallView(getActivity(), mFrame, mGroupcall);
 
         setRoom(SampleAPI.getActiveRoom());
@@ -156,7 +161,22 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
             mRoom.audio = true;
         }
 
+        resetUserProfiles();
+
         return view;
+    }
+
+    private void resetUserProfiles(){
+        HashMap<String, Mesibo.UserProfile > profiles = Mesibo.getUserProfiles();
+        Iterator pIterator = profiles.entrySet().iterator();
+
+        while (pIterator.hasNext()){
+            Map.Entry ele = (Map.Entry)pIterator.next();
+            Mesibo.UserProfile p = (Mesibo.UserProfile) ele.getValue();
+            Mesibo.deleteUserProfile(p, true, true);
+        }
+
+        profiles = Mesibo.getUserProfiles();
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -191,8 +211,14 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
             case R.id.button_invite_participant:
                 onInvite(v);
                 break;
+
+            case R.id.button_list_participants:
+                onListParticipants(v);
+                break;
+
         }
     }
+
 
 
     private void setupButtons(View view) {
@@ -206,6 +232,7 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
         ImageButton switchSourceButton = view.findViewById(R.id.button_switch_source);
         ImageButton inviteParticipantButton = view.findViewById(R.id.button_invite_participant);
         ImageButton groupMessagingButton = view.findViewById(R.id.button_group_message);
+        ImageButton listParticipantsButton = view.findViewById(R.id.button_list_participants);
 
         hangupButton.setOnClickListener(this);
         toggleAudioButton.setOnClickListener(this);
@@ -214,6 +241,7 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
         switchSourceButton.setOnClickListener(this);
         inviteParticipantButton.setOnClickListener(this);
         groupMessagingButton.setOnClickListener(this);
+        listParticipantsButton.setOnClickListener(this);
 
     }
 
@@ -308,6 +336,19 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
         getContext().startActivity(Intent.createChooser(sharingIntent, "Invite"));
     }
 
+    private void onListParticipants(View v) {
+        Bundle bundle = new Bundle();
+        bundle.putLong("groupid", mRoom.gid);
+
+        MesiboUI.Config opt = MesiboUI.getConfig();
+        opt.mToolbarColor = 0xff00868b;
+        opt.selectContactTitle = "Participants";
+        opt.createGroupTitle = null;
+
+        UIManager.launchParticipantList(getActivity(), 0, MesiboUserListFragment.MODE_SELECTCONTACT, 0, bundle);
+ }
+
+
     private String getInviteText(){
         if(mRoom == null)
             return "";
@@ -399,11 +440,15 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
         return -1;
     }
 
+
+
     public MesiboCall.MesiboParticipant removeParticipant(MesiboCall.MesiboParticipant p){
         ParticipantViewHolder vh = getViewHolder(p);
         int i = getParticipantPosition(mPublishers, p);
-        if(i >= 0)
+        if(i >= 0) {
             mPublishers.remove(i);
+            ParticipantViewHolder.deleteParticipantProfile(p);
+        }
 
         if(p == mFullScreenParticipant) {
             mFullScreenParticipant = null;
@@ -488,6 +533,10 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
     @Override
     public void MesiboGroupcall_OnSubscriber(MesiboCall.MesiboParticipant p, boolean joined) {
         Log.d(this.TAG, "MesiboGroupcall_OnSubscriber" + p.toString() + " action: " + joined);
+        if(joined)
+            ParticipantViewHolder.setParticipantProfile(p);
+        else
+            ParticipantViewHolder.deleteParticipantProfile(p);
     }
 
     // Called when the active audio device is changed by a user action,
@@ -509,7 +558,6 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
     // Called when the remote participant hangs up.
     @Override
     public void MesiboGroupcall_OnHangup(MesiboCall.MesiboParticipant participant, int reason) {
-
         if(MesiboCall.MESIBOCALL_HANGUP_REASON_REMOTE == reason)
             showParticipantNotification(participant, false);
 
@@ -619,12 +667,16 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
             Mesibo.UserProfile profile = null;
             profile = Mesibo.getUserProfile(params.peer);
 
+            Log.d(TAG, "Mesibo_onMessage: "+ message);
             String title = "";
             if (params.groupid > 0) {
                 title = "New Group Message from "+ profile.name;
             } else {
                 title = "New Message from "+ profile.name;
             }
+
+            if(params.groupid != mRoom.gid)
+                return false;
 
             showToastNotification(message, title);
 
@@ -636,7 +688,10 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
 
     @Override
     public void Mesibo_onMessageStatus(Mesibo.MessageParams params) {
+        if(params.peer.isEmpty() || params.mid == 0)
+            return;
 
+      Log.d(TAG, "Mesibo_onMessageStatus: "+ params.getStatus() + " id: "+ params.mid + " peer: "+ params.peer);
     }
 
     @Override
@@ -654,4 +709,45 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
 
     }
 
+
+//    UI Helper Listener
+    @Override
+    public void Mesibo_onForeground(Context context, int i, boolean b) {
+
+    }
+
+    @Override
+    public void Mesibo_onShowProfile(Context context, Mesibo.UserProfile userProfile) {
+
+    }
+
+    @Override
+    public void Mesibo_onDeleteProfile(Context context, Mesibo.UserProfile userProfile, Handler handler) {
+
+    }
+
+    @Override
+    public int Mesibo_onGetMenuResourceId(Context context, int i, Mesibo.MessageParams messageParams, Menu menu) {
+        return 0;
+    }
+
+    @Override
+    public boolean Mesibo_onMenuItemSelected(Context context, int i, Mesibo.MessageParams messageParams, int i1) {
+        return false;
+    }
+
+    @Override
+    public void Mesibo_onSetGroup(Context context, long l, String s, int i, String s1, String s2, String[] strings, Handler handler) {
+
+    }
+
+    @Override
+    public void Mesibo_onGetGroup(Context context, long l, Handler handler) {
+
+    }
+
+    @Override
+    public ArrayList<Mesibo.UserProfile> Mesibo_onGetGroupMembers(Context context, long l) {
+        return null;
+    }
 }

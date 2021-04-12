@@ -47,12 +47,10 @@ package com.mesibo.confdemo.groupcall;
  */
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 

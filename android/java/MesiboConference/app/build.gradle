@@ -73,9 +73,10 @@ dependencies {
         implementation "com.intuit.sdp:sdp-android:${project.Mesibo_intuitSdpVersion}"
 
         implementation "com.mesibo.api:uihelper:${project.MesiboVersion_UiHelper}"
-        implementation "com.mesibo.api:mesibo:${project.MesiboVersion_Api}"
         implementation "com.mesibo.api:calls:${project.MesiboVersion_Calls}"
         implementation "com.mesibo.api:ui:${project.MesiboVersion_Ui}"
+
+
 
 
     implementation "com.google.code.gson:gson:${project.Mesibo_gsonVersion}"

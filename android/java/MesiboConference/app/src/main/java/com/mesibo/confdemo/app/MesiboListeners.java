@@ -50,15 +50,9 @@ package com.mesibo.confdemo.app;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mesibo.api.Mesibo;
-import com.mesibo.confdemo.MainApplication;
-import com.mesibo.confdemo.R;
 import com.mesibo.uihelper.IProductTourListener;
 import com.mesibo.uihelper.WelcomeScreen;
 

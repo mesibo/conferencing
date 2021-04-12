@@ -1,4 +1,4 @@
-// config.js
+//utils.js
 
 /** Copyright (c) 2021 Mesibo
  * https://mesibo.com
@@ -36,37 +36,68 @@
  * Documentation
  * https://mesibo.com/documentation/
  *
+ * Source Code Repository
+ * https://github.com/mesibo/conferencing/tree/master/live-demo/web
+ *
  *
  */
-const MESIBO_APP_ID = 'web';
 
-/* If you are hosting Mesibo backend on your own server, change this accordingly.
- * Refer https://github.com/mesibo/conferencing/tree/master/live-demo/backend 
- */
-const MESIBO_API_BACKEND = 'https://app.mesibo.com/conf/api.php';
+let decodeString = (s) => {
+	// console.log(s);
+	if (!s)
+		return '';
+	return new TextDecoder('utf-8').decode(s);
+};
 
-const SHOW_CONF_LIMITS_ALERT = true; 
+let isValidString = (ele)=>{
+        return isValid(ele) && ""!=ele;
+};
 
-/* If you are hosting Mesibo backend on your own server, 
- * use your own captcha token 
- */
-const MESIBO_CAPTCHA_TOKEN = '6LceR_sUAAAAAEfV7LZK2cOaOHRzPSCNEK-_jcfU';
+// One validation function for all file types    
+let isValidFileType = (fName, fType)=> {
+    var extensionLists = {}; //Create an object for all extension lists
+    extensionLists.video = ['m4v', 'avi', 'mpg', 'mp4', 'webm'];
+    extensionLists.image = ['jpg', 'gif', 'bmp', 'png'];
+    extensionLists.audio = ['mp3', 'mp4', 'aac', 'flac', 'm4a', 'wva'];
+    extensionLists.document = ['doc', 'txt', 'pdf', 'docx', 'xls', 'xlx'];
+    return extensionLists[fType].indexOf(fName.split('.').pop()) > -1;
+}
 
-/* File url sources */
-var MESIBO_DOWNLOAD_URL = 'https://appimages.mesibo.com/';
-var MESIBO_UPLOAD_URL = 'https://s3.mesibo.com/api.php';
+let isValid = (ele)=>{
+        return null!=ele && undefined!=ele && NaN!=ele;
+};
+
+let isValidImage = (fName) =>{
+    if(!isValidString(fName))
+        return false;
+        
+    return isValidFileType(fName, 'image');
+};
+
+let isGroup = (user) => {
+        if(!isValid(user))
+            return false;
+
+        if(undefined == user.groupid)
+            return false;
+
+        return (user.groupid > 0);
+}
+
+let setElementDimension = (id, val, width) =>{
+    if(!isValid(ele) || !isValid(val) || val<=0 || !isValid(width))
+        return -1;
+
+    var ele = document.getElementById(id);
+    if(!isValid(ele))
+        return -1;
+
+    if(width)
+        ele.style.width = val + 'px';
+    else
+        ele.style.height = val + 'px'; 
+
+}
 
 
-/* Debug Mode Configuration */
-isDebug = true;// toggle this to turn on / off for global control
-if (isDebug) var MesiboLog = console.log.bind(window.console);
-else var MesiboLog = function() {};
 
-var ErrorLog = console.log.bind(window.console);
-/*ErrorLog(function_name, error_msg)*/
-
-const RESULT_FAIL = -1;
-const RESULT_SUCCESS = 0;
-
-//See https://mesibo.com/documentation/install/#versioning
-const CONF_DEMO_VERSION = "1.1.0"

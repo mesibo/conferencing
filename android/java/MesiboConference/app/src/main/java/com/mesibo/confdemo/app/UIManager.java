@@ -46,14 +46,15 @@ package com.mesibo.confdemo.app;
  *
  */
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.mesibo.confdemo.R;
+import com.mesibo.messaging.MesiboUI;
 import com.mesibo.uihelper.IProductTourListener;
+
 import com.mesibo.uihelper.MesiboUiHelper;
 import com.mesibo.uihelper.MesiboUiHelperConfig;
 import com.mesibo.uihelper.WelcomeScreen;
@@ -128,6 +129,10 @@ public class UIManager {
 
     public static void launchLogin(Activity context){
         launchLoginActivity(context);
+    }
+
+    public static void launchParticipantList(Context context, long forwardid, int selectionMode, int flag, Bundle bundle) {
+        MesiboUI.launchContacts(context, forwardid, selectionMode, flag, bundle);
     }
 
 }

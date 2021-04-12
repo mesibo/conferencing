@@ -48,17 +48,13 @@ package com.mesibo.confdemo.app;
  *
  */
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.mesibo.api.Mesibo;
-import com.mesibo.calls.api.MesiboCall;
 import com.mesibo.confdemo.R;
-import com.mesibo.confdemo.groupcall.GroupCallActivity;
 
 public class StartUpActivity extends AppCompatActivity {
 

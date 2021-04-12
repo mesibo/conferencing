@@ -378,4 +378,8 @@ public class JoinRoomActivity extends AppCompatActivity {
                     break;
         }
     }
+
+    public void onLogout(View view) {
+        SampleAPI.forceLogout();
+    }
 }

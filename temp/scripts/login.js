@@ -302,7 +302,8 @@ function loginCallback(r) {
 	var resp = JSON.parse(r);
 	console.log(resp);
 	var token = resp['token'];
-	if (resp.result == 'OK') {
+	
+  if (resp.result == 'OK') {
 		isLoginValid = true;
 
 		gLoginEmail = document.getElementById('email').value;
@@ -515,7 +516,9 @@ function enterRoomCallback(r) {
 
 	if ('OK' == resp.result) {
 		MesiboLog('Enter Room Successful');
-		MesiboLog(resp);
+		console.log(resp);
+
+    MesiboLog(resp);
 		toastr.success('Enter Room Successful');
 
 		var rv = _storeRoomCredentials(resp);
@@ -545,8 +548,9 @@ function enterRoomCallback(r) {
 
 
 function enterRoom(room) {
+  MesiboLog("enterRoom", room);
 
-	if (!isValid(room)) {
+	if (!room) {
 		room = {};
 		room.gid = _getRoomId();
 
@@ -583,7 +587,8 @@ function enterRoom(room) {
 			}
 
 			MesiboLog(MESIBO_API_BACKEND + '?token=' + room.token + '&op=joingroup&gid=' + room.gid + '&pin=' + room.pin + '&captcha=' + token);
-			var request = 'token=' + room.token + '&op=joingroup&gid=' + room.gid + '&pin=' + room.pin + '&captcha=' + token;
+			
+      var request = 'token=' + room.token + '&op=joingroup&gid=' + room.gid + '&pin=' + room.pin + '&captcha=' + token;
 
 			sendRequest(MESIBO_API_BACKEND, enterRoomCallback, request);
 
@@ -603,7 +608,8 @@ function createRoomCallback(r) {
 	if ('OK' == resp.result) {
 		MesiboLog('Create Room Successful');
 		MesiboLog(resp);
-		toastr.success('Create Room Successful');
+		
+    toastr.success('Create Room Successful');
 		var rv = _storeRoomCredentials(resp);
 		MesiboLog(rv);
 		if (-1 == rv || !isValid(rv)) {
@@ -701,13 +707,15 @@ function selectRoom(i) {
 }
 
 function enterSelectedRoom(i) {
-
+  
 	if (!isValid(i) || i < 0 || !myRooms.length || i > myRooms.length - 1) {
 		return;
 	}
 
 	var room = myRooms[i];
-	if (!isValid(room))
+  MesiboLog("enterSelectedRoom", i, room);
+
+  if (!isValid(room))
 		return -1;
 
 	if (!isValid(room.gid) || !isValid(room.pin) || !isValid(room.spin))
@@ -735,7 +743,7 @@ function displayRoomsList(rooms, count) {
 		room_item.className = 'list-group-item list-group-item-action';
 
 		if(rooms[i].pin && rooms[i].spin){
-			room_item.innerHTML = 'Created Room #' + rooms[i].gid + ': ' + rooms[i].name;
+			room_item.innerHTML = '[Host] Room #' + rooms[i].gid + ': ' + rooms[i].name;
 			room_item.setAttribute('style', 'text-overflow: ellipsis;white-space: nowrap;overflow: hidden; background-color: #f9f9f9');
 		}
 		else{
@@ -761,7 +769,7 @@ function showRoomsCallback(r) {
 	document.getElementById('my-rooms-spinner').style.display = 'none';
 
 	var resp = JSON.parse(r);
-
+  console.log(resp);
 
 	if ('OK' == resp.result) {
 		if (resp.count == 0) {

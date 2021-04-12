@@ -2,7 +2,6 @@ package com.mesibo.confdemo.groupcall;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import com.mesibo.api.Mesibo;
 import com.mesibo.calls.api.MesiboCall;
 import com.mesibo.calls.api.MesiboVideoView;
-import com.mesibo.confdemo.MainApplication;
 import com.mesibo.confdemo.R;
 import com.mesibo.messaging.MesiboUI;
 
@@ -23,6 +21,7 @@ public class ParticipantViewHolder implements View.OnClickListener {
     private final TextView nameView;
     private ImageView mIndicatorView;
     private final MesiboVideoView mVideoView;
+
     private final RelativeLayout mControls;
     MesiboCall.MesiboParticipant mStream = null;
     boolean mFullScreen = false;
@@ -104,16 +103,25 @@ public class ParticipantViewHolder implements View.OnClickListener {
 
         setStreamIndicators();
         setStreamView();
-        setUserProfile(getParticipant());
+        setParticipantProfile(getParticipant());
     }
 
-    private void setUserProfile(MesiboCall.MesiboParticipant participant) {
+    public static void setParticipantProfile(MesiboCall.MesiboParticipant participant) {
         Mesibo.UserProfile user = new Mesibo.UserProfile();
         user.address = participant.getAddress();
         user.name = participant.getName();
 
         Mesibo.setUserProfile(user, false);
 
+    }
+
+    public static boolean deleteParticipantProfile(MesiboCall.MesiboParticipant p){
+        Mesibo.UserProfile profile = Mesibo.getUserProfile(p.getAddress());
+        if(profile == null)
+            return false; //Profile doesn't exist
+
+        Mesibo.deleteUserProfile(profile, false, false);
+        return true;
     }
 
     public void setAudio(boolean enable) {

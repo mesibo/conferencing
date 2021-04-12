@@ -28,5 +28,6 @@
     <string name="select_room_to_join">Select room to join</string>
     <string name="conf_limits_description">Since this is a demo application, there are fair usage limits on the duration of the group call. However, you can download the entire source code for this app from <a href="https://github.com/mesibo/conferencing/tree/master/live-demo">mesibo GitHub repository</a>, and configure it using your own mesibo app token to enjoy unlimited call duration.</string>
     <string name="invite_participant">Invite Participant</string>
+    <string name="log_out">Log-Out</string>
 
 </resources>

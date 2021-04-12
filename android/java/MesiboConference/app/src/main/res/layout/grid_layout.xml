@@ -168,6 +168,25 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/layout_list_participants"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@drawable/drawable_background_circle"
+                android:gravity="center"
+                android:padding="4.5dp">
+
+                <ImageButton
+                    android:id="@+id/button_list_participants"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_gravity="start"
+                    android:background="@drawable/ic_mesibo_groups"
+                    android:contentDescription="@string/invite_participant" />
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

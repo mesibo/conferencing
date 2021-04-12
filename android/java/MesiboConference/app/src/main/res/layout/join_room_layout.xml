@@ -173,7 +173,21 @@
                         android:textColor="@color/white"
                         android:textSize="14.0sp" />
 
+
+
                 </LinearLayout>
+                <Button
+                    android:id="@+id/button_logout"
+                    style="@style/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1"
+                    android:background="@color/mesibo"
+                    android:onClick="onLogout"
+                    android:text="@string/log_out"
+                    android:textColor="@color/white"
+                    android:textSize="14.0sp" />
 
             </LinearLayout>
 
