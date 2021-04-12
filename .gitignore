@@ -1,6 +1,8 @@
 ./android/java/MesiboConference/app/build/
 **/.DS_Store
+**/.*
 **/.idea
 **/.gradle
+**/temp
 **/build
 **/local.properties
