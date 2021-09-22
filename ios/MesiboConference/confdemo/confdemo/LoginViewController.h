@@ -44,13 +44,12 @@
  *
  */
 
-
 #import <UIKit/UIKit.h>
 
 @interface LoginViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UITextField *mName;
-@property (weak, nonatomic) IBOutlet UITextField *mEmail;
 @property (weak, nonatomic) IBOutlet UITextField *mOtp;
+@property (weak, nonatomic) IBOutlet UITextField *mPhone;
 
 
 @end

@@ -44,9 +44,8 @@
  *
  */
 
-
 #import "AppDelegate.h"
-#import "SampleAPI.h"
+#import "MessengerDemoAPI.h"
 
 
 @interface AppDelegate ()
@@ -77,11 +76,12 @@
 }
 
 -(void) selectViewController {
-    NSString *token = [SampleAPIInstance getToken];
+    NSString *token = [MessengerDemoAPIInstance getToken];
+    
     BOOL login = (token == nil || token.length < 32);
     
     if(!login) {
-        [SampleAPIInstance startMesibo];
+        [MessengerDemoAPIInstance startMesibo];
     }
     
     //@"joinRoom"

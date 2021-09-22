@@ -45,10 +45,9 @@
  */
 
 
-
 #import "LoginViewController.h"
 #import "JoinRoomViewController.h"
-#import "SampleAPI.h"
+#import "MessengerDemoAPI.h"
 #import "AppAlert.h"
 #import "Mesibo/Mesibo.h"
 #import "AppDelegate.h"
@@ -67,13 +66,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    if(nil != [SampleAPIInstance getToken]) {
-        [MesiboInstance runInThread:YES handler:^{
-            [self launchJoinRoom];
-        }];
-        return;
-    }
     
     _mOtp.hidden = YES;
    
@@ -123,22 +115,27 @@
         return;;
     }
     
-    if(_mEmail.text.length < 3) {
-        [self showError:@"missing or bad name"];
+    if(_mPhone.text.length < 8 || (NSNotFound == [_mPhone.text rangeOfString:@"+"].location)) {
+        [self showError:@"Enter Phone number with Country code. For example, +18885551234"];
         return;
     }
     
-    [SampleAPIInstance login:_mName.text email:_mEmail.text code:_mOtp.text handler:^(int result, NSDictionary *response) {
+    [MessengerDemoAPIInstance login:_mName.text phone:_mPhone.text code:_mOtp.text handler:^(BOOL result, LoginResponse *response) {
         
-        if(SAMPLEAPP_RESULT_OK != result) {
-            [self showError:@"Login Failed"];
+        if(!result) {
+            [self showError:@"Login Failed. Bad Phone or the PIN"];
             return;
         }
         
         _mOtp.hidden = NO;
         
-        if([SampleAPIInstance getToken]) {
+        if(response.title && response.message && response.message.length > 0) {
+            [AppAlert showDialogue:response.message withTitle:response.title];
+        }
+        
+        if(response.token) {
             [self launchJoinRoom];
+            return;
         }
         
     }];

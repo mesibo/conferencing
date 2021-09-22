@@ -40,12 +40,6 @@
  *
  */
 
-const MESIBO_FILETYPE_IMAGE = 1;
-const MESIBO_FILETYPE_VIDEO = 2;
-const MESIBO_FILETYPE_AUDIO = 3;
-const MESIBO_FILETYPE_LOCATION = 4;
-
-
 //For debugging purposes only
 function getScope(){
 	return angular.element(document.getElementById('mesiboliveapp')).scope();

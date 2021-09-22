@@ -1,6 +1,3 @@
-//
-//  WelcomeViewController.m
-//  confdemo
 /** Copyright (c) 2021 Mesibo
  * https://mesibo.com
  * All rights reserved.
@@ -47,9 +44,8 @@
  *
  */
 
-
 #import "WelcomeViewController.h"
-#import "SampleAPI.h"
+#import "MessengerDemoAPI.h"
 #import "AppDelegate.h"
 
 @interface WelcomeViewController ()
@@ -66,17 +62,6 @@
     
     [self updateDescription:title desc:desc];
     
-    [SampleAPIInstance welcome:^(int result, NSDictionary *response) {
-        
-        if(SAMPLEAPP_RESULT_OK != result) {
-            return;
-        }
-        
-        NSString *title = [response objectForKey:@"title"];
-        NSString *desc = [response objectForKey:@"desc"];
-        
-        [self updateDescription:title desc:desc];
-    }];
 }
 
 -(void) updateDescription:(NSString *)title desc:(NSString *)desc {

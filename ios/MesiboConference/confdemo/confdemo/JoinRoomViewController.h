@@ -44,8 +44,6 @@
  *
  */
 
-
-
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -58,16 +56,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) IBOutlet UITableView *mRoomsTable;
 
--(BOOL) groupCallUi:(uint32_t)gid video:(BOOL)video publish:(BOOL)publish;
+-(BOOL) groupCallUi:(uint32_t)gid video:(BOOL)video;
 
-@end
-
-@interface Room : NSObject
-@property (nonatomic) NSString *name;
-@property (nonatomic) NSString *pin;
-@property (nonatomic) NSString *spin;
-@property (nonatomic) NSString * gid;
-@property (nonatomic) uint32_t uid;
 @end
 
 NS_ASSUME_NONNULL_END

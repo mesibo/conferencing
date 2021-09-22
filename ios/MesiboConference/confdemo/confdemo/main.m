@@ -43,9 +43,6 @@
  * https://mesibo.com/livedemo
  *
  */
-
-
-
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
 

@@ -44,12 +44,13 @@
  *
  */
 
-
 #import "CreateRoomViewController.h"
-#import "SampleAPI.h"
+#import "MessengerDemoAPI.h"
 #import "AppAlert.h"
+#import "Mesibo/Mesibo.h"
 
-@interface CreateRoomViewController () {
+
+@interface CreateRoomViewController () <MesiboDelegate> {
     NSMutableArray *mResolutions;
     NSInteger mSelectedResolution;
     JoinRoomViewController *mParent;
@@ -57,7 +58,7 @@
 
 @end
 
-@implementation CreateRoomViewController
+@implementation CreateRoomViewController 
 
 -(void) addResolution:(NSString *)name resolution:(uint32_t)resolution {
     Resolution *r = [Resolution new];
@@ -73,11 +74,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     mResolutions = [NSMutableArray new];
-    [self addResolution:@"Default" resolution:0];
-    [self addResolution:@"Standard" resolution:2];
-    [self addResolution:@"HD" resolution:3];
-    [self addResolution:@"Full HD" resolution:4];
-    [self addResolution:@"4K" resolution:5];
+    [self addResolution:@"Default" resolution:MESIBO_RESOLUTION_DEFAULT];
+    [self addResolution:@"Standard" resolution:MESIBO_RESOLUTION_VGA];
+    [self addResolution:@"HD" resolution:MESIBO_RESOLUTION_HD];
+    [self addResolution:@"Full HD" resolution:MESIBO_RESOLUTION_FHD];
+    [self addResolution:@"4K" resolution:MESIBO_RESOLUTION_4K];
     
     mSelectedResolution = 0;
     _mResolutionPicker.dataSource = self;
@@ -97,23 +98,35 @@
     
     Resolution *r = [mResolutions objectAtIndex:mSelectedResolution];
     
-    [SampleAPIInstance createRoom:_mRoom.text resolutoon:r.resolution handler:^(int result, NSDictionary *response) {
-        
-        if(SAMPLEAPP_RESULT_OK != result) {
-            [self showError:@"Create Failed"];
-            return;
-        }
-        
-        NSInteger gid = [[response objectForKey:@"gid"] longValue];
-        
-        
-        [self dismissViewControllerAnimated:NO completion:^{
-            [mParent groupCallUi:gid video:YES publish:YES];
-        }];
-        
-        
-        
+    MesiboGroupSettings *settings = [MesiboGroupSettings new];
+    settings.name = _mRoom.text;
+    settings.videoResolution = r.resolution;
+    [MesiboInstance createGroup:settings listener:self];
+}
+
+-(void) Mesibo_onGroupCreated:(MesiboProfile *)groupProfile {
+    /* Room has been created, now create a PIN so that we can invite users. You can create multiple
+       PINS with different permissions if requires
+     */
+    MesiboMemberPermissions *mp = [MesiboMemberPermissions new];
+    mp.flags = MESIBO_MEMBERFLAG_ALL;
+    [[groupProfile getGroupProfile] addPin:mp listener:self];
+}
+
+-(void) Mesibo_onGroupJoined:(MesiboProfile *)groupProfile {
+    
+}
+
+-(void) Mesibo_onGroupSettings:(MesiboProfile *)groupProfile settings:(MesiboGroupSettings *)settings permissions:(MesiboMemberPermissions *)permissions pins:(NSArray<MesiboGroupPin *> *)pins {
+    
+    /* We now have a PIN, let's start the conference */
+    [self dismissViewControllerAnimated:NO completion:^{
+        [mParent groupCallUi:[groupProfile getGroupId] video:YES];
     }];
+}
+
+-(void) Mesibo_onGroupError:(MesiboProfile *)groupProfile error:(uint32_t)error {
+    
 }
 
     

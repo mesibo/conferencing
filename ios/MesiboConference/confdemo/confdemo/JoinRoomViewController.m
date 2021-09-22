@@ -43,20 +43,19 @@
  * https://mesibo.com/livedemo
  *
  */
-
-
-
 #import "JoinRoomViewController.h"
 #import "AppAlert.h"
-#import "SampleAPI.h"
+#import "MessengerDemoAPI.h"
 #import "Mesibo/Mesibo.h"
-#import "MesiboGroupCallController.h"
+#import "GroupCallController.h"
 #import "CreateRoomViewController.h"
+#import "Mesibo/Mesibo.h"
 
 
 
-@interface JoinRoomViewController () {
-    NSMutableArray *mRooms;
+@interface JoinRoomViewController () <MesiboDelegate> {
+    NSMutableArray *mProfiles;
+    int mProfileRetries;
 }
 
 @end
@@ -65,37 +64,40 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    mRooms = [NSMutableArray new];
+    mProfiles = [NSMutableArray new];
     _mRoomsTable.hidden = YES;
     _mOtherRoomLabel.hidden = YES;
     _mOtherRoomDescLabel.hidden = YES;
+    mProfileRetries = 2;
     // Do any additional setup after loading the view.
-    
-    [SampleAPIInstance getRooms:^(int result, NSDictionary *response) {
-        
-        if(SAMPLEAPP_RESULT_OK != result) {
-            return;
-        }
-        [self showOtherRooms:response];
-        
-    }];
+
 }
 
--(void)showOtherRooms:(NSDictionary *) response {
-    NSArray *rooms = [response objectForKey:@"rooms"];
-    if(!rooms || !rooms.count)
-        return;
+-(void) viewWillAppear:(BOOL)animated {
+    [self showOtherRooms];
+}
+
+-(void)showOtherRooms {
+    NSArray *profiles = [MesiboInstance getSortedProfiles];
     
-    for(int i=0; i < rooms.count; i++) {
-        NSDictionary *d = [rooms objectAtIndex:i];
-        Room *r = [Room new];
-        r.name = [d objectForKey:@"name"];
-        r.pin = [d objectForKey:@"pin"];
-        r.spin = [d objectForKey:@"spin"];
-        r.gid = [d objectForKey:@"gid"];
-        r.uid = (uint32_t) strtoul([[d objectForKey:@"uid"] UTF8String], NULL, 10);
-        
-        [mRooms addObject:r];
+    if(!profiles || !profiles.count) {
+        // if login was just done, sync maybe in progress, try again after say 5 seconds
+        if(mProfileRetries > 0 && [MessengerDemoAPIInstance isLoginAttempted]) {
+            mProfileRetries--;
+            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC);
+            dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+                [self showOtherRooms];
+            });
+        }
+        return;
+    }
+    
+    [mProfiles removeAllObjects];
+    
+    for(int i=0; i < profiles.count; i++) {
+        MesiboProfile *profile = [profiles objectAtIndex:i];
+        if(![profile isGroup]) continue;
+        [mProfiles addObject:profile];
     }
     
     _mOtherRoomLabel.hidden = NO;
@@ -108,8 +110,8 @@
     [AppAlert showDialogue:error withTitle:@"Error"];
 }
 
--(BOOL) groupCallUi:(uint32_t)gid video:(BOOL)video publish:(BOOL)publish {
-    MesiboGroupCallController *vc = [[MesiboGroupCallController alloc] initWithGid:gid];
+-(BOOL) groupCallUi:(uint32_t)gid video:(BOOL)video {
+    GroupCallController *vc = [[GroupCallController alloc] initWithGid:gid];
     vc.modalPresentationStyle = UIModalPresentationFullScreen;
     
     UIViewController *me = self;
@@ -126,22 +128,24 @@
     [vc setParent:self];
     
     [self presentViewController:vc animated:NO completion:nil];
+}
+
+-(void)joinRoom:(NSString *)gid pin:(NSString *)pin {
+    uint32_t gid_i  = (uint32_t) strtoul([gid UTF8String], NULL, 10);
+    uint32_t pin_i  = (uint32_t) strtoul([pin UTF8String], NULL, 10);
+    
+    MesiboProfile *profile = [MesiboInstance getGroupProfile:gid_i];
+    [[profile getGroupProfile] join:pin_i listener:self];
+}
+
+-(void) Mesibo_onGroupJoined:(MesiboProfile *)groupProfile {
+    [self groupCallUi:[groupProfile getGroupId] video:YES];
+}
+
+-(void) Mesibo_onGroupError:(MesiboProfile *)groupProfile error:(uint32_t)error {
     
 }
 
--(void) joinRoom:(NSString *)gid pin:(NSString *)pin {
-    
-    [SampleAPIInstance joinRoom:gid pin:pin handler:^(int result, NSDictionary *response) {
-        
-        if(SAMPLEAPP_RESULT_OK != result) {
-            [self showError:@"Joining Room Failed"];
-            return;
-        }
-        
-        [self groupCallUi:gid video:YES publish:YES];
-        
-    }];
-}
 
 - (IBAction)OnJoin:(id)sender {
     uint32_t gid = 0;
@@ -155,7 +159,7 @@
     }
     
     if(_mPin.text.length < 6) {
-        [self showError:@"missing or bad Pin"];
+        [self showError:@"missing or bad PIN"];
         return;
     }
     
@@ -163,7 +167,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [mRooms count];
+    return [mProfiles count];
 }
 
 
@@ -177,8 +181,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
     }
     
-    Room *room = (Room *)[mRooms objectAtIndex:indexPath.row];
-    NSString *title = [NSString stringWithFormat:@"Room #%u: %@", room.gid, room.name];
+    MesiboProfile *profile = [mProfiles objectAtIndex:indexPath.row];
+    NSString *title = [NSString stringWithFormat:@"Room #%u: %@", [profile getGroupId], [profile getName]];
  
     cell.textLabel.text = title;
     cell.textLabel.textColor = [UIColor systemBlueColor];
@@ -186,18 +190,10 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    Room *room = (Room *)[mRooms objectAtIndex:indexPath.row];
+    MesiboProfile *profile = [mProfiles objectAtIndex:indexPath.row];
     [_mRoomsTable deselectRowAtIndexPath:indexPath animated:NO];
-    
-    NSString *pin = room.pin;
-    if(!pin || !pin.length)
-        pin = room.spin;
-    
-    [self groupCallUi:100531 video:YES publish:YES];
-    //[self joinRoom:room.gid pin:pin];
+
+    [self groupCallUi:[profile getGroupId] video:YES];
 }
 
-@end
-
-@implementation Room
 @end

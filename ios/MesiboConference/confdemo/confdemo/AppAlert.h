@@ -43,8 +43,6 @@
  * https://mesibo.com/livedemo
  *
  */
-
-
 #import <UIKit/UIKit.h>
 
 @interface AppAlert :NSObject

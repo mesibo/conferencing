@@ -1,8 +1,3 @@
-//
-//  ParticipantViewHolder.m
-//  confdemo
-//
-//
 /** Copyright (c) 2021 Mesibo
  * https://mesibo.com
  * All rights reserved.
@@ -48,7 +43,6 @@
  * https://mesibo.com/livedemo
  *
  */
-
 
 #import "ParticipantViewHolder.h"
 

@@ -96,7 +96,7 @@
 
 @property (nonatomic, weak) id _Nullable parent;
 @property (nonatomic, weak) id _Nullable controller;
-@property (nonatomic) MesiboUserProfile * _Nullable user;
+@property (nonatomic) MesiboProfile * _Nullable user;
 
 
 
@@ -152,9 +152,9 @@
 @class MesiboCallIncomingListener;
 
 @protocol MesiboCallIncomingListener
--(MesiboCallProperties *_Nullable) MesiboCall_OnIncoming:(MesiboUserProfile *_Nonnull)profile video:(BOOL)video;
+-(MesiboCallProperties *_Nullable) MesiboCall_OnIncoming:(MesiboProfile *_Nonnull)profile video:(BOOL)video;
 -(BOOL) MesiboCall_OnShowUserInterface:(id _Nullable )call properties:(MesiboCallProperties *_Nullable)cp;
--(BOOL) MesiboCall_OnNotify:(int)type profile:(MesiboUserProfile *_Nonnull)profile video:(BOOL)video;
+-(BOOL) MesiboCall_OnNotify:(int)type profile:(MesiboProfile *_Nonnull)profile video:(BOOL)video;
 -(void) MesiboCall_OnError:(MesiboCallProperties*_Nonnull)cp error:(int) error;
 @end
 
@@ -234,11 +234,11 @@ enum MesiboAudioDevice {MESIBO_AUDIODEVICE_SPEAKER, MESIBO_AUDIODEVICE_HEADSET, 
 -(void) MesiboCall_OnHangup:(MesiboCallProperties * _Nonnull)cp reason:(int)reason;
 -(void) MesiboCall_OnStatus:(MesiboCallProperties * _Nonnull)cp status:(int) status video:(BOOL) video;
 -(void) MesiboCall_OnAudioDeviceChanged:(MesiboCallProperties * _Nonnull)cp active:(int)active inactive:(int)inactive;
--(void) MesiboCall_OnVideoSourceChanged:(int)source index:(int) index;
+-(void) MesiboCall_OnVideoSourceChanged:(MesiboCallProperties * _Nonnull)cp source:(int)source index:(int) index;
 -(void) MesiboCall_OnVideo:(MesiboCallProperties * _Nonnull)cp video:(MesiboVideoProperties * _Nonnull)video remote:(BOOL)remote;
 -(void) MesiboCall_OnUpdateUserInterface:(MesiboCallProperties * _Nonnull)cp state:(int)state video:(BOOL)video enable:(BOOL)enable;
--(void) MesiboCall_OnOrientationChanged:(BOOL)landscape remote:(BOOL)remote;
--(void) MesiboCall_OnBatteryStatus:(BOOL)low remote:(BOOL)remote;
+-(void) MesiboCall_OnOrientationChanged:(MesiboCallProperties * _Nonnull)cp landscape:(BOOL)landscape remote:(BOOL)remote;
+-(void) MesiboCall_OnBatteryStatus:(MesiboCallProperties * _Nonnull)cp lowBattery:(BOOL)low remote:(BOOL)remote;
 -(void) MesiboCall_OnDTMF:(MesiboCallProperties * _Nonnull)cp digit:(int)digit;
 @optional
 
@@ -304,7 +304,7 @@ typedef void (^MesiboPermissionBlock)(BOOL granted);
 -(void) MesiboGroupcall_OnHangup:(MesiboParticipant * _Nonnull)p reason:(int)reason;
 -(void) MesiboGroupcall_OnConnected:(MesiboParticipant * _Nonnull)p connected:(BOOL) connected;
 -(void) MesiboGroupcall_OnTalking:(MesiboParticipant * _Nonnull)p talking:(BOOL) talking;
--(void) MesiboGroupcall_OnVideoSourceChanged:(int)source index:(int) index;
+-(void) MesiboGroupcall_OnVideoSourceChanged:(MesiboParticipant * _Nonnull)p source:(int)source index:(int) index;
 -(void) MesiboGroupcall_OnVideo:(MesiboParticipant * _Nonnull)p aspectRatio:(float)aspectRatio landscape:(BOOL)landscape;
 -(void) MesiboGroupcall_OnAudio:(MesiboParticipant * _Nonnull)p;
 @end

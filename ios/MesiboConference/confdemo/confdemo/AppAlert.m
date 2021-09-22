@@ -44,10 +44,6 @@
  *
  */
 
-//  UIAlerts.m
-//  Mesibo
-
-
 #import "AppAlert.h"
 #import "Mesibo/Mesibo.h"
 
