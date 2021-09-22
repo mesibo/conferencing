@@ -61,23 +61,11 @@ import com.mesibo.uihelper.WelcomeScreen;
 public class MesiboListeners implements Mesibo.ConnectionListener, IProductTourListener {
     public static final String TAG = "MesiboListeners";
 
-    @SuppressWarnings("all")
-    public SampleAPI.ResponseHandler mHandler = new SampleAPI.ResponseHandler() {
-        @Override
-        public void HandleAPIResponse(SampleAPI.Response response) {
-            Log.d(TAG, "Response: " + response);
-            if (null == response)
-                return;
-        }
-    };
-
     @Override
     public void Mesibo_onConnectionStatus(int status) {
         Log.d(TAG, "on Mesibo Connection: " + status);
-        if (Mesibo.STATUS_SIGNOUT == status) {
-            SampleAPI.forceLogout();
-        } else if (Mesibo.STATUS_AUTHFAIL == status) {
-            SampleAPI.forceLogout();
+        if (Mesibo.STATUS_SIGNOUT == status || Mesibo.STATUS_AUTHFAIL == status) {
+            MessengerDemoAPI.getInstance().forceLogout();
         }
     }
 

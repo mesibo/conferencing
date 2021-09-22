@@ -13,9 +13,6 @@ This folder contains the source code for the mesibo sample conferencing app for 
 ### Full Demo - web/live-demo
 This folder contains the source code for the mesibo sample conferencing app hosted at [https://mesibo.com/livedemo](https://mesibo.com/livedemo), This is a fully functional, Zoom Like Video Conferencing app which you can directly integrate into your website.
 
-### backend
-This folder contains the source code of admin (backend) APIs for the demo. 
-
 ### Features:
 - Group Voice and Video Call with unlimited members
 - Live Streaming

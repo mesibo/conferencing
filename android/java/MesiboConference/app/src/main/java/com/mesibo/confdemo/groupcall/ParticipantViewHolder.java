@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mesibo.api.Mesibo;
+import com.mesibo.api.MesiboProfile;
 import com.mesibo.calls.api.MesiboCall;
 import com.mesibo.calls.api.MesiboVideoView;
 import com.mesibo.confdemo.R;
@@ -107,20 +108,16 @@ public class ParticipantViewHolder implements View.OnClickListener {
     }
 
     public static void setParticipantProfile(MesiboCall.MesiboParticipant participant) {
-        Mesibo.UserProfile user = new Mesibo.UserProfile();
-        user.address = participant.getAddress();
-        user.name = participant.getName();
-
-        Mesibo.setUserProfile(user, false);
+        MesiboProfile user = Mesibo.getProfile(participant.getAddress());
 
     }
 
     public static boolean deleteParticipantProfile(MesiboCall.MesiboParticipant p){
-        Mesibo.UserProfile profile = Mesibo.getUserProfile(p.getAddress());
+        MesiboProfile profile = Mesibo.getProfile(p.getAddress());
         if(profile == null)
             return false; //Profile doesn't exist
 
-        Mesibo.deleteUserProfile(profile, false, false);
+        //profile.remove();
         return true;
     }
 

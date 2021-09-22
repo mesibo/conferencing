@@ -66,12 +66,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mesibo.api.Mesibo;
+import com.mesibo.api.MesiboGroupProfile;
+import com.mesibo.api.MesiboProfile;
 import com.mesibo.calls.api.MesiboCall;
 import com.mesibo.calls.api.MesiboCallActivity;
 import com.mesibo.confdemo.R;
-import com.mesibo.confdemo.app.AppConfig;
-import com.mesibo.confdemo.app.SampleAPI;
 import com.mesibo.confdemo.app.UIManager;
+import com.mesibo.mediapicker.MediaPicker;
 import com.mesibo.messaging.MesiboUI;
 import com.mesibo.messaging.MesiboUserListFragment;
 
@@ -84,11 +85,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 // Refer to https://mesibo.com/documentation/api/conferencing/listeners
 
-public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallListener, MesiboCall.GroupCallInProgressListener, Mesibo.MessageListener, View.OnClickListener, ParticipantViewHolder.Listener, Mesibo.UIHelperListner{
+public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallListener, MesiboCall.GroupCallInProgressListener, Mesibo.MessageListener, View.OnClickListener, ParticipantViewHolder.Listener, Mesibo.GroupListener, Mesibo.UIHelperListner{
     public static final String TAG = "MesiboCallFragment";
     private long mGid = 0;
-    private Mesibo.UserProfile mGroupProfile = null;
-    private SampleAPI.Room mRoom = null;
+    private boolean mVideo=true, mAudio=true;
+    private boolean mResumed = false;
+    private MesiboProfile mGroupProfile = null;
 
     private MesiboCall.MesiboGroupCall mGroupcall = null; // TBD, move to call manager
     private MesiboCall.MesiboParticipant mLocalPublisher = null;
@@ -101,23 +103,18 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
     private ArrayList<ParticipantViewHolder> mStreams = new ArrayList<>();
 
     private GroupCallView mGridView = null;
+    private MesiboGroupProfile.GroupSettings mSettings = null;
+    private MesiboGroupProfile.MemberPermissions mPermissions = null;
+    private MesiboGroupProfile.GroupPin[] mPins = null;
 
-    protected void setGroup(long gid) {
+    private View mView = null;
+
+    protected void setGroup(long gid, boolean video, boolean audio) {
         mGid = gid;
-    }
+        mVideo = video;
+        mAudio = audio;
 
-    protected void setRoom(SampleAPI.Room room){
-        if(room == null)
-            return;
-
-        mRoom = room;
-
-        mGroupProfile = new Mesibo.UserProfile();
-        mGroupProfile.address = null;
-        mGroupProfile.groupid = mRoom.gid;
-        mGroupProfile.name = mRoom.name;
-
-        Mesibo.setUserProfile(mGroupProfile, false);
+        mGroupProfile = Mesibo.getProfile(gid);
     }
 
     private boolean isGroupCallStarted = false;
@@ -127,8 +124,8 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int layout_id = R.layout.grid_layout;
-        View view = inflater.inflate(layout_id, container, false);
-        FrameLayout mFrame = (FrameLayout) view.findViewById(R.id.streams_grid);
+        mView = inflater.inflate(layout_id, container, false);
+        FrameLayout mFrame = (FrameLayout) mView.findViewById(R.id.streams_grid);
 
 
         mGroupcall = MesiboCall.getInstance().groupCall((MesiboCallActivity) getActivity(), mGid);
@@ -139,44 +136,17 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
 
         // Message Listener has been implemented here
         Mesibo.addListener(this);
-
-
+        mGroupProfile.getGroupProfile().getSettings(this);
 
         mGridView = new GroupCallView(getActivity(), mFrame, mGroupcall);
 
-        setRoom(SampleAPI.getActiveRoom());
-        if(mRoom == null)
-            return view;
+        setupButtons(mView);
 
-        if(mRoom.pin.isEmpty() || mRoom.spin.isEmpty()){
-            // Only creators of the room can invite participants
-            // Hide button otherwise
-            view.findViewById(R.id.layout_invite_participant).setVisibility(View.GONE);
-        }
+        if(mVideo) mAudio = true;
 
-        setupButtons(view);
+        //resetUserProfiles();
 
-        if(mRoom.video) {
-            //We are currently not doing video only call, audio or audio+video
-            mRoom.audio = true;
-        }
-
-        resetUserProfiles();
-
-        return view;
-    }
-
-    private void resetUserProfiles(){
-        HashMap<String, Mesibo.UserProfile > profiles = Mesibo.getUserProfiles();
-        Iterator pIterator = profiles.entrySet().iterator();
-
-        while (pIterator.hasNext()){
-            Map.Entry ele = (Map.Entry)pIterator.next();
-            Mesibo.UserProfile p = (Mesibo.UserProfile) ele.getValue();
-            Mesibo.deleteUserProfile(p, true, true);
-        }
-
-        profiles = Mesibo.getUserProfiles();
+        return mView;
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -242,6 +212,7 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
         inviteParticipantButton.setOnClickListener(this);
         groupMessagingButton.setOnClickListener(this);
         listParticipantsButton.setOnClickListener(this);
+        listParticipantsButton.setEnabled(false); // TBD
 
     }
 
@@ -325,6 +296,9 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
     public void onLaunchGroupMessagingUi(View view) {
         MesiboUI.Config opt = MesiboUI.getConfig();
         opt.mToolbarColor = 0xff00868b;
+        opt.emptyUserListMessage = "No messages! Click on the message icon above to start messaging!";
+        MediaPicker.setToolbarColor(opt.mToolbarColor);
+
         MesiboUI.launchMessageView(getActivity(), null, mGroupProfile.groupid);
     }
 
@@ -338,23 +312,19 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
 
     private void onListParticipants(View v) {
         Bundle bundle = new Bundle();
-        bundle.putLong("groupid", mRoom.gid);
+        bundle.putLong("groupid", mGid);
 
         MesiboUI.Config opt = MesiboUI.getConfig();
         opt.mToolbarColor = 0xff00868b;
         opt.selectContactTitle = "Participants";
         opt.createGroupTitle = null;
 
-        UIManager.launchParticipantList(getActivity(), 0, MesiboUserListFragment.MODE_SELECTCONTACT, 0, bundle);
+        // TBD, show participants
  }
 
 
     private String getInviteText(){
-        if(mRoom == null)
-            return "";
-        String invite = String.format( "Join my room with Room-ID:%s  and pin: %s", mRoom.gid, mRoom.pin);
-
-        return invite;
+        return "Hey, join my open-source mesibo conference room (" + mGroupProfile.getName() + ") from the Web or your Android or iPhone mobile phone. Use the following credentials: Room ID: " + mGid + ", Pin: " + mPins[0].pin;
     }
 
     private void showToastNotification(String message, String title){
@@ -382,29 +352,42 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
     }
 
     private void startGroupCall(){
+        synchronized (this) {
+            if(!mResumed || null == mSettings) return;
+            if(isGroupCallStarted) return;
+            isGroupCallStarted = true;
+        }
+
         if(mGroupcall == null) {
+
             Log.d(TAG, "call instance is null!");
             return;
         }
 
+        if(null == mPins || 0 == mPins.length){
+            // Only creators of the room can invite participants
+            // Hide button otherwise
+            mView.findViewById(R.id.layout_invite_participant).setVisibility(View.GONE);
+        }
+
+        if(mPermissions.callDuration > 0) {
+            String warning = "The call Duration is limited to " + mPermissions.callDuration/60 + " minutes. You can upgrade your mesibo account to remove this limitation.";
+            UIManager.showAlert(getActivity(), "Time Limit", warning);
+        }
+
         mGroupcall.join(this);
-        isGroupCallStarted = true;
 
-
-        setRoom(SampleAPI.getActiveRoom());
-        if(mRoom == null)
-            return;
-
-        if(mRoom.publish != 1) {
+        if(0 == (mPermissions.flags&MesiboGroupProfile.MEMBERFLAG_PUBL)) {
             //User does not have the permission to publish
             return;
         }
+
         //Publish self stream
         mLocalPublisher = mGroupcall.createPublisher(0);
         mLocalPublisher.setVideoSource(MesiboCall.MESIBOCALL_VIDEOSOURCE_CAMERAFRONT, 0);
 
-        mLocalPublisher.call(mRoom.audio, mRoom.video, this);
-        mLocalPublisher.setName(AppConfig.getConfig().name);
+        mLocalPublisher.call(mAudio, mVideo, this);
+        mLocalPublisher.setName(Mesibo.getSelfProfile().getName());
         mPublishers.add(mLocalPublisher);
         Log.d(TAG, "Publishing Self");
     }
@@ -412,8 +395,8 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
     @Override
     public void onResume() {
         super.onResume();
-        if(!isGroupCallStarted)
-            startGroupCall();
+        mResumed = true;
+        startGroupCall();
     }
 
     @Override
@@ -520,7 +503,7 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
             else
                 mPublishers.add(participant);
 
-            participant.call(mRoom.audio, mRoom.video , this);
+            participant.call(mAudio, mVideo , this);
 
         } else {
             removeParticipant(participant);
@@ -624,7 +607,7 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
     // For example, from camera feed to sharing their screen.
     // Or from their front-facing camera to rear-facing camera (on Mobile)
     @Override
-    public void MesiboGroupcall_OnVideoSourceChanged(int source, int index) {
+    public void MesiboGroupcall_OnVideoSourceChanged(MesiboCall.MesiboParticipant p, int source, int index) {
         Log.d(TAG, "MesiboGroupcall_OnVideoSourceChanged");
     }
 
@@ -656,6 +639,48 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
         }
     }
 
+    @Override
+    public void Mesibo_onGroupCreated(MesiboProfile mesiboProfile) {
+
+    }
+
+    @Override
+    public void Mesibo_onGroupJoined(MesiboProfile mesiboProfile) {
+
+    }
+
+    @Override
+    public void Mesibo_onGroupLeft(MesiboProfile mesiboProfile) {
+
+    }
+
+    @Override
+    public void Mesibo_onGroupMembers(MesiboProfile mesiboProfile, MesiboGroupProfile.Member[] members) {
+
+    }
+
+    @Override
+    public void Mesibo_onGroupMembersJoined(MesiboProfile mesiboProfile, MesiboGroupProfile.Member[] members) {
+
+    }
+
+    @Override
+    public void Mesibo_onGroupMembersRemoved(MesiboProfile mesiboProfile, MesiboGroupProfile.Member[] members) {
+
+    }
+
+    @Override
+    public void Mesibo_onGroupSettings(MesiboProfile mesiboProfile, MesiboGroupProfile.GroupSettings groupSettings, MesiboGroupProfile.MemberPermissions memberPermissions, MesiboGroupProfile.GroupPin[] groupPins) {
+        mSettings = groupSettings;
+        mPermissions = memberPermissions;
+        mPins = groupPins;
+        startGroupCall();
+    }
+
+    @Override
+    public void Mesibo_onGroupError(MesiboProfile mesiboProfile, long l) {
+
+    }
 
     @Override
     public boolean Mesibo_onMessage(Mesibo.MessageParams params, byte[] data) {
@@ -664,18 +689,18 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
             if(message == null || message.isEmpty())
                 return false;
 
-            Mesibo.UserProfile profile = null;
-            profile = Mesibo.getUserProfile(params.peer);
+            MesiboProfile profile = null;
+            profile = Mesibo.getProfile(params.peer);
 
             Log.d(TAG, "Mesibo_onMessage: "+ message);
             String title = "";
             if (params.groupid > 0) {
-                title = "New Group Message from "+ profile.name;
+                title = "New Group Message from "+ profile.getName();
             } else {
-                title = "New Message from "+ profile.name;
+                title = "New Message from "+ profile.getName();
             }
 
-            if(params.groupid != mRoom.gid)
+            if(params.groupid != mGid)
                 return false;
 
             showToastNotification(message, title);
@@ -717,12 +742,12 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
     }
 
     @Override
-    public void Mesibo_onShowProfile(Context context, Mesibo.UserProfile userProfile) {
+    public void Mesibo_onShowProfile(Context context, MesiboProfile userProfile) {
 
     }
 
     @Override
-    public void Mesibo_onDeleteProfile(Context context, Mesibo.UserProfile userProfile, Handler handler) {
+    public void Mesibo_onDeleteProfile(Context context, MesiboProfile userProfile, Handler handler) {
 
     }
 
@@ -736,18 +761,4 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
         return false;
     }
 
-    @Override
-    public void Mesibo_onSetGroup(Context context, long l, String s, int i, String s1, String s2, String[] strings, Handler handler) {
-
-    }
-
-    @Override
-    public void Mesibo_onGetGroup(Context context, long l, Handler handler) {
-
-    }
-
-    @Override
-    public ArrayList<Mesibo.UserProfile> Mesibo_onGetGroupMembers(Context context, long l) {
-        return null;
-    }
 }

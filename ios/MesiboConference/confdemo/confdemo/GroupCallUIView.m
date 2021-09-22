@@ -229,7 +229,7 @@
             break;
     }
     
-    NSString *invite = [NSString stringWithFormat:@"Hey, join my open-source mesibo conference room (%@) from the Web or your Android or iPhone mobile device. Use the following credentials: Room ID: %u, Pin: %u", [mProfile getName], [mProfile getGroupId], pin.pin];
+    NSString *invite = [NSString stringWithFormat:@"Hey, join my open-source mesibo conference room (%@) from the Web or your Android or iPhone mobile phone. Use the following credentials: Room ID: %u, Pin: %u", [mProfile getName], [mProfile getGroupId], pin.pin];
 
     
     [self shareText:invite parent:mController];

@@ -33,7 +33,7 @@
             android:label="@string/app_name">
         </activity>
         <activity
-            android:name="com.mesibo.confdemo.app.JoinRoomActivity"
+            android:name="com.mesibo.confdemo.groupcall.JoinRoomActivity"
             android:label="@string/app_name">
         </activity>
         <activity

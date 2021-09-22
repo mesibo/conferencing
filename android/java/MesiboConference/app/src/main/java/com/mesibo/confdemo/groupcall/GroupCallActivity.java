@@ -51,6 +51,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.mesibo.api.MesiboGroupProfile;
 import com.mesibo.calls.api.MesiboCallActivity;
 import com.mesibo.calls.api.R;
 
@@ -58,6 +59,7 @@ public class GroupCallActivity extends MesiboCallActivity {
     private boolean mInit = false;
 
     private long mGid = 0;
+    private boolean mVideo=true, mAudio=true;
 
     private GroupCallFragment mFragment;
     private boolean mShowDemoNotice = false; //TBD, show only if duration > 0
@@ -73,12 +75,14 @@ public class GroupCallActivity extends MesiboCallActivity {
         Bundle b = getIntent().getExtras();
         if(null != b) {
             mGid = b.getLong("gid");
-
-            long duration = b.getLong("duration");
-            if(duration > 0)
-                mShowDemoNotice = true;
+            mAudio = b.getBoolean("audio", true);
+            mVideo = b.getBoolean("video", true);
         }
 
+        if(mGid < 1000) {
+            finish();
+            return;
+        }
 
         setContentView(R.layout.activity_mesibocall);
 
@@ -90,16 +94,12 @@ public class GroupCallActivity extends MesiboCallActivity {
             return;
         }
 
-        /* all permissions were already granted */
-        if(0 == res) {
-            if(mShowDemoNotice)
-                showDemoLimits();
-            else
-                initCall();
-        } else {
+        if(res > 0) {
             /* permission requested - wait for results */
             return;
         }
+
+        initCall();
 
     }
 
@@ -109,18 +109,10 @@ public class GroupCallActivity extends MesiboCallActivity {
 
         // If request is cancelled, the result arrays are empty.
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            showDemoLimits();
+            initCall();
         }
         else
             finish();
-    }
-
-    private void showDemoLimits() {
-        Fragment fragment = new DemoNoticeFragment();
-        FragmentManager fm = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.top_fragment_container, fragment);
-        ft.commitAllowingStateLoss();
     }
 
     public void initCall() {
@@ -128,7 +120,7 @@ public class GroupCallActivity extends MesiboCallActivity {
         mInit = true;
 
         mFragment = new GroupCallFragment();
-        mFragment.setGroup(mGid);
+        mFragment.setGroup(mGid, mVideo, mAudio);
 
         FragmentManager fm = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();

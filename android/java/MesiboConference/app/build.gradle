@@ -20,7 +20,6 @@ android {
         targetSdkVersion 30
         versionCode project.PUBLISH_VERSION_CODE
         versionName project.PUBLISH_VERSION
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     lintOptions {
@@ -73,6 +72,7 @@ dependencies {
         implementation "com.intuit.sdp:sdp-android:${project.Mesibo_intuitSdpVersion}"
 
         implementation "com.mesibo.api:uihelper:${project.MesiboVersion_UiHelper}"
+        implementation "com.mesibo.api:mesibo:${project.MesiboVersion_Api}"
         implementation "com.mesibo.api:calls:${project.MesiboVersion_Calls}"
         implementation "com.mesibo.api:ui:${project.MesiboVersion_Ui}"
 

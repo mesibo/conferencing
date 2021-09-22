@@ -48,10 +48,12 @@ package com.mesibo.confdemo.app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.mesibo.confdemo.R;
+import com.mesibo.confdemo.groupcall.JoinRoomActivity;
 import com.mesibo.messaging.MesiboUI;
 import com.mesibo.uihelper.IProductTourListener;
 
@@ -103,17 +105,19 @@ public class UIManager {
         res.add(new WelcomeScreen("", ":", 0, R.drawable.welcome, 0xff00868b));
 
 
-        MesiboUiHelperConfig.mScreens = res;
-        MesiboUiHelperConfig.mWelcomeBackgroundColor = 0xff00868b;
+        config.mScreens = res;
+        config.mWelcomeBackgroundColor = 0xff00868b;
 
-        MesiboUiHelperConfig.mBackgroundColor = 0xffffffff;
-        MesiboUiHelperConfig.mPrimaryTextColor = 0xff172727;
-        MesiboUiHelperConfig.mButttonColor = 0xff00868b;
-        MesiboUiHelperConfig.mButttonTextColor = 0xffffffff;
-        MesiboUiHelperConfig.mSecondaryTextColor = 0xff666666;
+        config.mBackgroundColor = 0xffffffff;
+        config.mPrimaryTextColor = 0xff172727;
+        config.mButttonColor = 0xff00868b;
+        config.mButttonTextColor = 0xffffffff;
+        config.mSecondaryTextColor = 0xff666666;
 
-        MesiboUiHelperConfig.mScreenAnimation = true;
-        MesiboUiHelperConfig.mSmartLockUrl = "https://app.mesibo.com";
+        config.mScreenAnimation = true;
+        config.mSmartLockUrl = "https://confdemo.mesibo.com";
+        config.mPhoneVerificationBottomText = "IMPORTANT: We will NOT send OTP.  Instead, you can generate OTP for any number from the mesibo console. Sign up at https://mesibo.com/console";
+
 
 
         MesiboUiHelper.setConfig(config);
@@ -135,4 +139,28 @@ public class UIManager {
         MesiboUI.launchContacts(context, forwardid, selectionMode, flag, bundle);
     }
 
+    public static void showAlert(Context context, String title, String message, DialogInterface.OnClickListener pl, DialogInterface.OnClickListener nl) {
+        //android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
+        if(null == context) {
+            return; //
+        }
+        android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(context);
+        dialog.setTitle(title);
+        dialog.setMessage(message);
+        // dialog.setIcon(android.R.drawable.ic_dialog_alert);
+        dialog.setCancelable(true);
+
+        dialog.setPositiveButton(android.R.string.ok, pl);
+        //dialog.setNegativeButton(android.R.string.cancel, nl);
+
+        try {
+            dialog.show();
+        } catch (Exception e) {
+            //Log.d(TAG, "Exception showing alert: " + e);
+        }
+    }
+
+    public static void showAlert(Context context, String title, String message) {
+        showAlert(context, title, message, null, null);
+    }
 }

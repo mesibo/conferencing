@@ -72,7 +72,7 @@ public class StartUpActivity extends AppCompatActivity {
 
     void startNextActivity() {
 
-        if (TextUtils.isEmpty(AppConfig.getConfig().token)) {
+        if (TextUtils.isEmpty(MessengerDemoAPI.getInstance().getToken())) {
             if (getIntent().getBooleanExtra(SKIPTOUR, false)) {
                 UIManager.launchLogin(this);
             } else {

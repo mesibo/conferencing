@@ -56,7 +56,7 @@ import android.widget.TextView;
 import com.mesibo.api.Mesibo;
 import com.mesibo.confdemo.R;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements MessengerDemoAPI.Listener {
     private static final String TAG = "LoginActivity";
     private String mName = "";
     private String mEmail = "";
@@ -70,56 +70,44 @@ public class LoginActivity extends AppCompatActivity {
     private TextView mEnterCodeTextView = null;
     private TextView mErrorView = null;
 
-
-    public SampleAPI.ResponseHandler mLoginHandler = new SampleAPI.ResponseHandler() {
-        @Override
-        public void HandleAPIResponse(SampleAPI.Response response) {
-            Log.d(TAG, "Response: " + response);
-            boolean save = false;
-            if (!SampleAPI.checkResponse(response)) {
-                // Handle Error
-                if (null == response) {
-                    showError(getString(R.string.login_error_connection));
-                    return;
-                }
-
-                if(View.VISIBLE == mCodeView.getVisibility())
-                    showError(getString(R.string.login_error_otp));
-                else
-                    showError(getString(R.string.login_error_email));
-
-                return;
-            }
-
-            if (!response.result.equalsIgnoreCase("OK")) {
-
-                if(response.op.equals("joingroup")){
-                    showError(getString(R.string.join_room_existing_error));
-                }
-                return;
-            }
-
-            if (response.op.equals("login") && response.result.equalsIgnoreCase("OK")
-                    && TextUtils.isEmpty(response.token)) {
-                showOtpPrompt();
-            }
-
-            if (response.op.equals("login") && !TextUtils.isEmpty(response.token)) {
-                AppConfig.getConfig().token = response.token; //TBD, save into preference
-                AppConfig.getConfig().email = response.email;
-                AppConfig.getConfig().name = response.name;
-
-                save = true;
-
-                Mesibo.reset();
-                SampleAPI.startMesibo();
-
-            }
-
-            if (save)
-                AppConfig.save();
+    @Override
+    public void MessengerDemo_onLogin(boolean result, MessengerDemoAPI.Response response) {
+        if(!result) {
+            if(View.VISIBLE == mCodeView.getVisibility())
+                showError(getString(R.string.login_error_otp));
+            else
+                showError(getString(R.string.login_error_email));
+            return;
         }
-    };
+
+        if(!TextUtils.isEmpty(response.message)) {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    UIManager.showAlert(LoginActivity.this, response.title, response.message);
+                }
+            });
+        }
+
+        if (TextUtils.isEmpty(response.token)) {
+            showOtpPrompt();
+            return;
+        }
+
+        Mesibo.reset();
+        MessengerDemoAPI.getInstance().startMesibo();
+    }
+
+    @Override
+    public void MessengerDemo_onLogout(boolean result) {
+
+    }
+
+    @Override
+    public void MessengerDemo_onError() {
+        showError(getString(R.string.login_error_connection));
+        return;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -186,7 +174,7 @@ public class LoginActivity extends AppCompatActivity {
             return -1;
         }
 
-        SampleAPI.emailLogin(mName, mEmail, mCode, captchaToken, mLoginHandler);
+        MessengerDemoAPI.getInstance().login(mName, mEmail, mCode, this);
 
         return 0;
     }

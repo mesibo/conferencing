@@ -1,4 +1,4 @@
-package com.mesibo.confdemo.app;
+package com.mesibo.confdemo.groupcall;
 
 /** Copyright (c) 2021 Mesibo
  * https://mesibo.com
@@ -57,24 +57,27 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.mesibo.api.Mesibo;
+import com.mesibo.api.MesiboGroupProfile;
+import com.mesibo.api.MesiboProfile;
 import com.mesibo.calls.api.MesiboCall;
 import com.mesibo.confdemo.MainApplication;
 import com.mesibo.confdemo.R;
-import com.mesibo.confdemo.groupcall.GroupCallActivity;
+import com.mesibo.confdemo.app.MessengerDemoAPI;
 
 import java.util.ArrayList;
 
-public class JoinRoomActivity extends AppCompatActivity {
-    private static final String TAG = "JoinRoomActivity";
-    private Integer mRoomId = 0;
-    private Integer mRoomPin = 0;
+import static com.mesibo.api.MesiboGroupProfile.MESIBO_GROUPCALLFLAG_AUDIO;
+import static com.mesibo.api.MesiboGroupProfile.MESIBO_GROUPCALLFLAG_SCREEN;
+import static com.mesibo.api.MesiboGroupProfile.MESIBO_GROUPCALLFLAG_TALKING;
+import static com.mesibo.api.MesiboGroupProfile.MESIBO_GROUPCALLFLAG_VIDEO;
 
-    private String mRoomName = "";
+public class JoinRoomActivity extends AppCompatActivity implements Mesibo.GroupListener {
+    private static final String TAG = "JoinRoomActivity";
 
     private EditText mEnterRoomId = null;
     private EditText mEnterRoomPin = null;
@@ -86,9 +89,9 @@ public class JoinRoomActivity extends AppCompatActivity {
 
     private View mCreateRoomView = null;
     private Spinner mCreateRoomsResolutions = null;
-    private int mSelectedResolution = STREAM_RESOLUTION_DEFAULT;
+    private int mSelectedResolution = Mesibo.RESOLUTION_DEFAULT;
 
-    private SampleAPI.Room[] mRoomsArray = {};
+    private ArrayList<MesiboProfile> mRoomsArray = new ArrayList<MesiboProfile>();
     private ArrayList<String> mRoomsList = new ArrayList<String>();
     private ArrayAdapter<String> mAdapter = null;
     private ListView mRoomsListView;
@@ -104,87 +107,6 @@ public class JoinRoomActivity extends AppCompatActivity {
     private static final String RESOLUTION_FULL_HD_STRING = "Full HD - 1920x1080";
     private static final String RESOLUTION_4K_STRING = "4K - 3840x2160";
     private static final String RESOLUTION_QVGA_STRING = "QVGA - 320x240";
-
-    private static final int STREAM_RESOLUTION_DEFAULT = 0;
-    private static final int STREAM_RESOLUTION_STANDARD = 0;
-    private static final int STREAM_RESOLUTION_QVGA = 1;
-    private static final int STREAM_RESOLUTION_VGA = 2;
-    private static final int STREAM_RESOLUTION_HD = 3;
-    private static final int STREAM_RESOLUTION_FHD = 4;
-    private static final int STREAM_RESOLUTION_4K = 5;
-
-
-    public SampleAPI.ResponseHandler mJoinRoomHandler = new SampleAPI.ResponseHandler() {
-        @Override
-        public void HandleAPIResponse(SampleAPI.Response response) {
-
-            mProgressBar.setVisibility(View.GONE);
-
-            if (! SampleAPI.checkResponse(response)) { //Error occurred
-                showError(getString(R.string.login_error_connection));
-                return;
-            }
-
-
-            if (!response.result.equalsIgnoreCase("OK")) {
-
-                if(response.op.equals("joingroup")){
-                    showError(getString(R.string.join_room_existing_error));
-                }
-                return;
-            }
-
-            //Show available rooms to enter
-            if(response.op.equals("rooms") && response.result.equalsIgnoreCase("OK")){
-                SampleAPI.Room[] rl = response.rooms;
-                AppConfig.getConfig().rooms = rl;
-                setAvailableRooms(rl);
-            }
-
-            // Entering an existing room
-            if(response.op.equals("joingroup") && response.result.equalsIgnoreCase("OK")){
-                SampleAPI.Room room = getRoom(response);
-
-                AppConfig.getConfig().activeRoom = room;
-                joinConferenceRoom((int) response.gid, room);
-            }
-
-            // Creating and entering a new room
-            if(response.op.equals("setgroup") && response.result.equalsIgnoreCase("OK")){
-                SampleAPI.Room room = getRoom(response);
-
-                AppConfig.getConfig().activeRoom = room;
-                joinConferenceRoom((int) response.gid, room);
-            }
-
-
-        }
-    };
-
-
-    private SampleAPI.Room getRoom(SampleAPI.Response response){
-        if(null == response)
-            return  null;
-
-        SampleAPI.Room room = new SampleAPI.Room();
-
-        long gid = response.gid;
-        if(gid <=0)
-            return null;
-
-
-        room.gid = gid;
-        room.name = response.name;
-        room.resolution = response.resolution;
-        room.pin = response.pin;
-        room.spin =response.spin;
-        room.publish = response.publish;
-        room.audio = mAudio;
-        room.video = mVideo;
-        room.duration = response.duration;
-
-        return room;
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -208,7 +130,6 @@ public class JoinRoomActivity extends AppCompatActivity {
 
         mCreateRoomsResolutions = findViewById(R.id.choose_resolution_options);
 
-
         String[] options = new String[]{RESOLUTION_DEFAULT_STRING, RESOLUTION_STANDARD_STRING, RESOLUTION_HD_STRING, RESOLUTION_FULL_HD_STRING, RESOLUTION_4K_STRING, RESOLUTION_QVGA_STRING};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, options);
         mCreateRoomsResolutions.setAdapter(adapter);
@@ -220,22 +141,22 @@ public class JoinRoomActivity extends AppCompatActivity {
                 String selected = options[position];
                 switch (selected){
                     case RESOLUTION_DEFAULT_STRING:
-                        mSelectedResolution = STREAM_RESOLUTION_DEFAULT;
+                        mSelectedResolution = Mesibo.RESOLUTION_DEFAULT;
                         break;
                     case RESOLUTION_STANDARD_STRING:
-                        mSelectedResolution = STREAM_RESOLUTION_STANDARD;
+                        mSelectedResolution = Mesibo.RESOLUTION_VGA;
                         break;
                     case RESOLUTION_HD_STRING:
-                        mSelectedResolution = STREAM_RESOLUTION_HD;
+                        mSelectedResolution = Mesibo.RESOLUTION_HD;
                         break;
                     case RESOLUTION_FULL_HD_STRING:
-                        mSelectedResolution = STREAM_RESOLUTION_FHD;
+                        mSelectedResolution = Mesibo.RESOLUTION_FHD;
                         break;
                     case RESOLUTION_4K_STRING:
-                        mSelectedResolution = STREAM_RESOLUTION_4K;
+                        mSelectedResolution = Mesibo.RESOLUTION_4K;
                         break;
                     case RESOLUTION_QVGA_STRING:
-                        mSelectedResolution = STREAM_RESOLUTION_QVGA;
+                        mSelectedResolution = Mesibo.RESOLUTION_QVGA;
                         break;
                 }
             }
@@ -252,29 +173,40 @@ public class JoinRoomActivity extends AppCompatActivity {
 
 
     public void onEnterRoom(View view) {
-        String rid = mEnterRoomId.getText().toString();
-        String rpin = mEnterRoomPin.getText().toString();
+        String gid_s = mEnterRoomId.getText().toString();
+        String pin_s = mEnterRoomPin.getText().toString();
 
-        if (rid.isEmpty() || rpin.isEmpty())
+        if (gid_s.isEmpty() || pin_s.isEmpty())
             return;
 
-        mRoomId = Integer.parseInt(rid);
-        mRoomPin = Integer.parseInt(rpin);
+        long gid = Integer.parseInt(gid_s);
+        long pin = Integer.parseInt(pin_s);
 
-        SampleAPI.enterRoom(mRoomId.toString(), mRoomPin.toString(), AppConfig.getConfig().token, "", mJoinRoomHandler);
-        mProgressBar.setVisibility(View.VISIBLE);
+        MesiboProfile profile = Mesibo.getProfile(gid);
+        profile.getGroupProfile().join(pin, this);
     }
 
     public void onCreateRoom(View view) {
-        String rname = mEnterRoomName.getText().toString();
+        String name = mEnterRoomName.getText().toString();
 
-        if (rname.isEmpty())
+        if (name.isEmpty())
             return;
 
-        mRoomName = rname;
+        MesiboGroupProfile.GroupSettings settings = new MesiboGroupProfile.GroupSettings();
+        settings.name = name;
+        settings.videoResolution = mSelectedResolution;
 
-        SampleAPI.createRoom(mRoomName, mSelectedResolution, AppConfig.getConfig().token, "", mJoinRoomHandler);
-        mProgressBar.setVisibility(View.VISIBLE);
+        /* video room without audio does not make sense */
+        if(mVideo) {
+           settings.flags = MESIBO_GROUPCALLFLAG_VIDEO | MESIBO_GROUPCALLFLAG_AUDIO;
+        }
+        else if(mAudio) {
+           settings.flags = MESIBO_GROUPCALLFLAG_AUDIO;
+        }
+
+        settings.flags |= MESIBO_GROUPCALLFLAG_SCREEN | MESIBO_GROUPCALLFLAG_TALKING;
+
+        Mesibo.createGroup(settings, this);
     }
 
     public void onRoomRadioButtonClicked(View view) {
@@ -312,30 +244,30 @@ public class JoinRoomActivity extends AppCompatActivity {
         mEnterRoomView.setVisibility(View.GONE);
         mMyRoomsView.setVisibility(View.VISIBLE);
 
-        SampleAPI.getRooms(AppConfig.getConfig().token, mJoinRoomHandler);
-        mProgressBar.setVisibility(View.VISIBLE);
+        setAvailableRooms();
     }
 
-    private void setAvailableRooms(SampleAPI.Room[] rl) {
-        mRoomsArray = rl;
-        mRoomsList.clear();
-        for(int i=0; i< rl.length; i++){
-            SampleAPI.Room r = rl[i];
-            String room_description = "";
-            if(r.spin.isEmpty())
-                room_description = "Room #"+ r.gid + ": "+ r.name;
-            else
-                room_description = "[Host] Room #"+ r.gid + ": "+ r.name;
+    private void setAvailableRooms() {
+        ArrayList<MesiboProfile> profiles = Mesibo.getSortedUserProfiles();
 
+        mRoomsArray.clear();
+        mRoomsList.clear();
+        for(int i=0; i< profiles.size(); i++){
+            MesiboProfile profile = profiles.get(i);
+            if(!profile.isGroup()) continue;
+
+
+            String room_description = "Room #"+ profile.getGroupId() + ": "+ profile.getName();
             mRoomsList.add(room_description);
+            mRoomsArray.add(profile);
         }
+
         mAdapter.notifyDataSetChanged();
 
         mRoomsListView.setOnItemClickListener((parent, view, position, id) -> {
 
-            SampleAPI.Room r = mRoomsArray[position];
-            SampleAPI.enterRoom(String.valueOf(r.gid), r.pin, AppConfig.getConfig().token, "", mJoinRoomHandler);
-
+            MesiboProfile profile = mRoomsArray.get(position);
+            joinConferenceRoom(profile);
         });
 
     }
@@ -349,19 +281,13 @@ public class JoinRoomActivity extends AppCompatActivity {
         mErrorEnterRoomView.setVisibility(View.GONE);
     }
 
-    private void joinConferenceRoom(Integer gid, SampleAPI.Room room) {
+    private void joinConferenceRoom(MesiboProfile profile) {
         MesiboCall.getInstance().init(MainApplication.getAppContext());
 
         Intent intent = new Intent(MainApplication.getAppContext(), GroupCallActivity.class);
-        intent.putExtra("gid", room.gid);
-        intent.putExtra("duration", room.duration);
-
-        if(room == null)
-            return;
-
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-
+        intent.putExtra("gid", profile.getGroupId());
+        intent.putExtra("videp", mVideo);
+        intent.putExtra("audio", mAudio);
         MainApplication.getAppContext().startActivity(intent);
     }
 
@@ -380,6 +306,51 @@ public class JoinRoomActivity extends AppCompatActivity {
     }
 
     public void onLogout(View view) {
-        SampleAPI.forceLogout();
+        MessengerDemoAPI.getInstance().forceLogout();
+    }
+
+    @Override
+    public void Mesibo_onGroupCreated(MesiboProfile mesiboProfile) {
+        MesiboGroupProfile.MemberPermissions permissions = new MesiboGroupProfile.MemberPermissions();
+        permissions.flags = MesiboGroupProfile.MEMBERFLAG_ALL;
+        mesiboProfile.getGroupProfile().addPin(permissions, this);
+    }
+
+    @Override
+    public void Mesibo_onGroupJoined(MesiboProfile mesiboProfile) {
+        joinConferenceRoom(mesiboProfile);
+    }
+
+    @Override
+    public void Mesibo_onGroupLeft(MesiboProfile mesiboProfile) {
+
+    }
+
+    @Override
+    public void Mesibo_onGroupMembers(MesiboProfile mesiboProfile, MesiboGroupProfile.Member[] members) {
+
+    }
+
+    @Override
+    public void Mesibo_onGroupMembersJoined(MesiboProfile mesiboProfile, MesiboGroupProfile.Member[] members) {
+
+    }
+
+    @Override
+    public void Mesibo_onGroupMembersRemoved(MesiboProfile mesiboProfile, MesiboGroupProfile.Member[] members) {
+
+    }
+
+    @Override
+    public void Mesibo_onGroupSettings(MesiboProfile mesiboProfile, MesiboGroupProfile.GroupSettings groupSettings, MesiboGroupProfile.MemberPermissions memberPermissions, MesiboGroupProfile.GroupPin[] groupPins) {
+        // we can create multiple pings here
+        joinConferenceRoom(mesiboProfile);
+    }
+
+    @Override
+    public void Mesibo_onGroupError(MesiboProfile mesiboProfile, long error) {
+        if(MesiboGroupProfile.GROUPERROR_BADPIN == error) {
+            showError("Incorrect RoomId or the PIN");
+        }
     }
 }

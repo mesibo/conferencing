@@ -50,21 +50,19 @@ package com.mesibo.confdemo;
 import android.app.Application;
 import android.content.Context;
 
-import com.mesibo.confdemo.app.AppConfig;
-import com.mesibo.confdemo.app.SampleAPI;
+import com.mesibo.confdemo.app.MessengerDemoAPI;
 
 public class MainApplication extends Application {
     public static final String TAG = "MainApplication";
     private static Context mContext = null;
-    private static AppConfig mConfig = null;
+    private MessengerDemoAPI mApi = null; // create a strong reference
 
     @Override
     public void onCreate() {
         super.onCreate();
         mContext = getApplicationContext();
-        mConfig = new AppConfig(this);
-        SampleAPI.init(getAppContext());
-
+        mApi = MessengerDemoAPI.getInstance();
+        mApi.init(getAppContext());
     }
 
     public static Context getAppContext() {
