@@ -380,14 +380,14 @@ $(document).keyup(function(e) {
 });
 
 
-function getParameterByName(name, url){
+function getParameterByName(name, url, defval){
 	MesiboLog('getParameterByName', name, url);
 	if (!url) url = window.location.href;
 	name = name.replace(/[\[\]]/g, '\\$&');
 	var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
 		results = regex.exec(url);
-	if (!results) return false;
-	if (!results[2]) return '';
+	if (!results) return defval;
+	if (!results[2]) return defval;
 	return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 

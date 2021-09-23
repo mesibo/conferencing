@@ -20,15 +20,14 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" crossorigin="anonymous"></script>
 		<script type="text/javascript" src="third-party/bootstrap.min.js"></script>
 
-		<script src="https://www.google.com/recaptcha/api.js?render=6LceR_sUAAAAAEfV7LZK2cOaOHRzPSCNEK-_jcfU"></script>
-
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
-		<script type="text/javascript" src="https://api.mesibo.com/mesibo.js" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="https://api.mesibo.com/mesibo3.js" crossorigin="anonymous"></script>
 		<script type="text/javascript" src="mesibo/utils.js"></script>		
 		<script type="text/javascript" src="mesibo/config.js"></script>
 		<script type="text/javascript" src="scripts/app-utils.js"></script>
 		<script type="text/javascript" src="scripts/login.js"></script>
+		<script type="text/javascript" src="login/login.js"></script>
 	</head>
 
 <body>
@@ -68,9 +67,6 @@
 					</div>
 				</div>				
 			</div>
-			<!-- <div style="text-align: center; position: fixed; bottom: 0">
-	   <p style="font-size: 15px; color: #ccc;">This page is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" style="color:#ccc;">Privacy Policy</a> and <a style="color:#ccc;" href="https://policies.google.com/terms">Terms of Service</a> apply.</p>
-	   </div>  -->	        
 		</div>
 		<div class="col-md-5 order-md-2 col-lg-4 order-lg-2 col-12 order-1 align-self-center" style="background-color: white;">
 			<div id="main-login-form" class="h-100">
@@ -87,12 +83,13 @@
 							<div>
 								<input type="name" class="form-control input-lg" id="name" name="name" value="">
 							</div>
-							<label class="control-label" style="font-size: 15px; padding-top: 20px">Email</label>
+							<label class="control-label" style="font-size: 15px; padding-top: 20px">Phone Number with Country code (For Example, +18885551234)</label>
 							<div>
-								<input type="email" class="form-control input-lg" id="email" name="email" value="">
+								<input type="text" class="form-control input-lg" id="phone" name="phone" value="">
 							</div>
 						</div>
 						<div class="form-group" id="otp-input" style="display: none;font-size: 15px">
+							<div class="alert alert-danger" role="alert" id="otp-message"></div>
 							<label class="control-label" id="email-otp-prompt"></label>
 
 							<input type="number"  class="form-control input-lg" id="otp" name="password">
@@ -112,110 +109,24 @@
 	     <a style="color:grey; font-size: 30px" target="_blank" href="https://github.com/mesibo/conferencing" ><i class="fab fa-github"></i></a>
 	     </div>   -->
 	     <div style="text-align: center; color: grey;">
-		     <p style="font-size: 10px; color: #ccc;">This login form is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" style="color:#ccc;">Privacy Policy</a> and <a style="color:#ccc;" href="https://policies.google.com/terms">Terms of Service</a> apply.</p>
+		     <p style="font-size: 10px; color: #666;">Using mesibo services and website is subject to mesibo <a style="color:#cw00868bccc;" href="https://mesibo.com/terms-of-use/">Terms of Service</a>.</p>
 	     </div>
 				</div>
 			</div><!-- /.modal-content --> 
 
-			<div id="main-room-form" style="display: none">
-				<div class="modal-header px-0 py-1"> 
-					<div class="row w-100 justify-content-center mx-auto">  
-						<h5 class="modal-title py-2"> Mesibo Live Demo</h5>
-
-						<div class="row  w-100 justify-content-center" style="text-align: center;">
-
-							<label  class="col-md-6" style="font-size: 15px"><input type="radio" name="optroom" onclick="enterRoomForm(this)" checked value="enter" style="vertical-align: -1px"> &nbsp; Enter Existing Room</label>
-
-							<label class="col-md-6" style="font-size: 15px"><input type="radio" name="optroom" onclick="createRoomForm(this)" value="create" style="vertical-align: -1px;"> &nbsp; Create New Room</label>                                                     
-						</div>
-
-					</div>
-				</div>
-				<div class="modal-body" style="padding: 5px 10px 5px 10px">					    
-					<form role="form" id ="join-room-form" action="">
-						<input type="hidden" name="_token" value="">
-						<div class="form-group">
-							<div id="room_id_div" style="margin-bottom: 10px">
-								<label class="control-label" id="room_id_label" >Enter Room-ID</label>
-								<div>
-									<input type="number" class="form-control input-lg" id="roomid" value="">
-								</div>
-							</div>
-							<div id="room_name_div" style="display: none;margin-bottom: 10px">
-								<label class="control-label" id="room_name_prompt" required> Room Name</label>
-								<div>
-									<input type="name"  class="form-control input-lg" id="roomname" maxlength="128">
-								</div>
-							</div>
-							<div id="room_password_div" style="margin-bottom: 10px">
-								<label class="control-label" id="room_password_label" >Enter Pin </label>
-								<div>
-									<input type="number" class="form-control input-lg" id="roompin" oninput="this.value=this.value.slice(0,this.maxLength)" maxlength="8">
-								</div>
-							</div>
-							<div class="list-group" id="my-rooms-list" style="display: none; height: 200px;margin-bottom: 10px;overflow-y:auto; overflow-x: none">
-								<h5 style="text-align: center;" >My Rooms</h5>
-
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="container mx-auto" id="stream-quality-options" style=" display: none;">
-								<!-- 								<a style="text-align: center">Set Resolution</a> -->
-								<div class="row" style="text-align: center;">
-									<label class="radio col-3" style="font-size: 15px;"><input type="radio" name="optquality" onclick="" checked value="default" id="quality-default" style="vertical-align: -1px;"> &nbsp; Default</label>                                      
-
-									<label class="radio col-5" style="font-size: 15px;"><input type="radio"  name="optquality" onclick="" value="vga" id="quality-vga" style="vertical-align: -1px;"> &nbsp; Standard <span style="font-size: 10px">- 640x480</span></label>
-
-									<label class="radio col-4" style="font-size: 15px;"><input type="radio"  name="optquality" onclick="" value="hd" id="quality-hd" style="vertical-align: -1px;"> &nbsp; HD <span style="font-size: 10px">- 1280x720</span></label>
-
-									<div class="w-100"></div>
-
-									<label class="radio col-4  px-0" style="font-size: 15px;"><input type="radio"  name="optquality" onclick="" value="fhd" id="quality-fhd" style="vertical-align: -1px;"> &nbsp; Full HD<span style="font-size: 10px"> - 1920x1080</span></label>
-
-									<label class="radio col-4 px-0" style="font-size: 15px;"><input type="radio"  name="optquality" onclick="" value="uhd" id="uhd" style="vertical-align: -1px;"> &nbsp;4K<span style="font-size: 10px"> - 3840x2160</span></label>
-
-									<label class="radio col-4" style="font-size: 15px;"><input type="radio"  name="optquality" onclick="" value="qvga" id="quality-qvga" style="vertical-align: -1px;"> &nbsp;QVGA<span style="font-size: 10px"> - 320x240</span></label>
-								</div>
-
-							</div>
-
-							<div style="text-align: center;">
-								<div style="padding-bottom: 20px;">
-									<i id="default_audio_init" class="fas fa-microphone" onclick="toggleDefualtAudioMute()" style="color: green; cursor: pointer; width: 30px; font-size: 30px" title="Audio Enabled"></i>&nbsp;
-									<i id="default_video_init" class="fas fa-video" onclick="toggleDefaultVideoMute()" style="color: green; cursor: pointer; width: 40px; font-size: 30px" title="Video Enabled"></i>&nbsp;
-								</div>
-								<button type="button" class="btn btn-success" id="join-room-button" onclick="enterRoom()">
-									<span class="spinner-border spinner-border-sm" id="join-room-spinner" role="status" aria-hidden="true" style="display: none;"></span>
-									<span class="sr-only">Enter Room...</span>
-									<span id="join-room-button-text">Enter Room</span>
-								</button>
-								<button type="button" class="btn btn-success" id="my-rooms-button" onclick="showMyRooms()">
-									<span class="spinner-border spinner-border-sm" id="my-rooms-spinner" role="status" aria-hidden="true" style="display: none;"></span>
-									<span class="sr-only">My Rooms...</span>
-									<span id="my-rooms-button-text">My Rooms</span>
-								</button>
-
-								<button style="margin-top: 1px" type="button" class="btn btn-success" id="logout-button" onclick="logOut()">Logout</button>
-							</div> 
-
-						</div>
-					</form>					               
-				</div>
-			</div><!-- /.modal-content --> 
 		</div>    
 	</div>
 </div>
 <script type="text/javascript">
-	var token = _getToken();
-if(token){
-	hideLoginScreen();
-	showJoinRoomScreen();
-}
+	if(login_init()){
+		hideLoginScreen();
+		enterConfrencing();
+	}
 
-if(isMobileDetected()){
-	document.getElementById("mesibo-logo").style.display = "none";
-	document.getElementById("mesibo-logo-m").style.display = "block";
-}
+	if(isMobileDetected()){
+		document.getElementById("mesibo-logo").style.display = "none";
+		document.getElementById("mesibo-logo-m").style.display = "block";
+	}
 
 </script>
 </body>

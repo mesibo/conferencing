@@ -36,12 +36,11 @@
 
     <script type="text/javascript" src="mesibo/config.js"></script>    
     <script type="text/javascript" src="mesibo/utils.js"></script>
-    <script type="text/javascript" src="mesibo/app.js"></script>
-    <script type="text/javascript" src="mesibo/calls.js"></script>
     <script type="text/javascript" src="mesibo/files.js"></script>
 
     <script type="text/javascript" src="scripts/app-utils.js"></script>
     <script type="text/javascript" src="scripts/login.js"></script>
+    <script type="text/javascript" src="login/login.js"></script>
     <script type="text/javascript" src="scripts/controller.js"></script>
     <!--SCRIPTINCLUDEEND--> 
     <style type="text/css">
@@ -161,7 +160,7 @@
                                 <label class="col-12 control-label text-center my-0 mx-auto"><strong>Online in the following room(s)</strong></label>
                                 <hr style="border: 0; height: 1px; background-image: -webkit-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);background-image: -moz-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);background-image: -ms-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);background-image: -o-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0); ">
                                 <div>
-                                    <strong>Room Name</strong>: &nbsp; {{room.name}} &nbsp;<strong> Room ID </strong>: &nbsp; {{room.gid}} &nbsp;
+                                    <strong>Room Name</strong>: &nbsp; {{getRoomName()}} &nbsp;<strong> Room ID </strong>: &nbsp; {{getRoomId()}} &nbsp;
                                 </div>                                    
                                 </div>
                             </div>

@@ -42,87 +42,25 @@
 
 
 const _credentialLoginRecord = 'mesibo_credential_login_record';
-const _credentialRoomRecord = 'mesibo_credential_room_record';
-
-const PARTICIPANT_CAN_VIEW = 0;
-const PARTICIPANT_CAN_PUBLISH = 1;
-
-const STREAM_RESOLUTION_DEFAULT = 0;
-const STREAM_RESOLUTION_QVGA = 1;
-const STREAM_RESOLUTION_VGA = 2;
-const STREAM_RESOLUTION_HD = 3;
-const STREAM_RESOLUTION_FHD = 4;
-const STREAM_RESOLUTION_UHD = 5;
-
-
-var init_room = {};
-init_room.audio = true;
-init_room.video = true;
-
-var myRooms = [];
 
 var isLoginValid = false;
-var gLoginEmail = '';
 
-function _getPhoneNumber() {
-	var phone = document.getElementById('phone').value;
-	if (!isValidString(phone))
-		return '';
-
-	//xxx:Validate Phone Number
-	if (phone[0] != '+') {
-		toastr.error('Enter phone number with country code, (without spaces) starting with + .Example, if country code is 91 enter: +91XXXXXXXXXX');
-		return '';
-	}
-	phone = phone.substr(1); //Strip +
-	return phone;
-}
-
-function _getVerificationCode() {
-	var code = document.getElementById('otp').value;
-	if (!isValidString(code))
-		return '';
-
-	//xxx:Validate code
-	return code;
-}
-
-function _getName() {
-	var name = document.getElementById('name').value;
-	if (!isValidString(name)) {
-		toastr.error('Enter valid name');
+function getValue(field, showerror) {
+	var val = document.getElementById(field).value;
+	if (showerror && !isValidString(val)) {
+		toastr.error('Enter valid ' + field);
 		return '';
 	}
 
-	//xxx:Validate name
-	return name;
-}
-
-function _getEmail() {
-	var email = document.getElementById('email').value;
-	var mailformat = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-	if (!isValidString(email) || mailformat.test(email) == false) {
-		toastr.error('Enter valid email');
-		return '';
-	}
-
-	return email;
-}
-
-function _getAppId() {
-	if (!isValidString(MESIBO_APP_ID))
-		return '';
-
-	return MESIBO_APP_ID;
+	return val;
 }
 
 function getMesiboDemoAppToken() {
 
-	var appid = _getAppId();
-	var name = _getName();
-	var email = _getEmail();
-	var code = _getVerificationCode();
-	console.log('appid', appid, 'name', name, 'email', email);
+	var name = getValue('name', true);
+	var phone = getValue('phone', true);
+	var code = getValue('otp');
+	console.log('name', name, 'phone', phone);
 
 	if (isValidString(code) && isLoginValid) {
 		//Login with OTP
@@ -130,30 +68,14 @@ function getMesiboDemoAppToken() {
 		document.getElementById('login-spinner').style.display = 'inline-block';
 
 		console.log('login with otp');
-		MesiboLog(MESIBO_API_BACKEND + '?op=login&appid=' + appid + '&email=' + email + '&name=' + name + '&code=' + code);
-		sendRequest(MESIBO_API_BACKEND, loginCallback, 'op=login&appid=' + appid + '&email=' + email + '&name=' + name + '&code=' + code);
+		login_start(name, phone, code, loginCallback);
 	}
-	else if (isValidString(name) && isValidString(email)) {
-		//Send OTP to email
-		MesiboLog('send otp to email');
+	else if (isValidString(name) && isValidString(phone)) {
+		//Send OTP to phone
+		MesiboLog('send otp to phone');
 		document.getElementById('login-button').disabled = true;
 		document.getElementById('login-spinner').style.display = 'inline-block';
-
-		grecaptcha.ready(function() {
-			grecaptcha.execute(MESIBO_CAPTCHA_TOKEN, {action: 'login'}).then(function(token) {
-				// MesiboLog('token', token);
-				if (!isValidString(token)) {
-					_displayError('Invalid captcha');
-					return -1;
-				}
-
-				MesiboLog(MESIBO_CAPTCHA_TOKEN);
-
-				MesiboLog(MESIBO_API_BACKEND + '?op=login&appid=' + appid + '&email=' + email + '&name=' + name + '&captcha=' + token);        
-				sendRequest(MESIBO_API_BACKEND, loginCallback, 'op=login&appid=' + appid + '&email=' + email  + '&name=' + name + '&captcha=' + token);
-
-			});
-		});
+		login_start(name, phone, '', loginCallback);
 	}
 
 }
@@ -165,181 +87,55 @@ function _displayError(error) {
 	toastr.error(error);
 }
 
-
-function _storeLoginCredentials(login) {
-	MesiboLog('_storeLoginCredentials', login);
-	if (!isValid(login))
-		return -1;
-
-	var login_creds = {};
-
-	if (isValidString(login['token']));
-	login_creds.token = login['token'];
-
-	if (isValidString(login['address']));
-	login_creds.address = login['address'];
-
-	if (isValidString(login['email']));
-	login_creds.email = login['email'];
-
-	if (isValidString(login['name']));
-	login_creds.name = login['name'];
-
-	if (isValid(login['uid']));
-	login_creds.uid = login['uid'];
-
-	if (isValid(login['ts']))
-		login_creds.ts = login['ts'];
-
-	var rv = localStorage.setItem(_credentialLoginRecord, JSON.stringify(login_creds));
-	return rv;
-}
-
-function _getStoredCredentialItem(key) {
-	if (!isValidString(key))
-		return;
-
-	return localStorage.getItem(key);
-}
-
-function _initLoginCredentialsFromStorage() {
-	var login_creds = localStorage.getItem(_credentialLoginRecord);
-	if (!isValidString(login_creds))
-		return null;
-
-	login_creds = JSON.parse(login_creds);
-
-	return login_creds;
-}
-
-function _initRoomCredentialsFromStorage(group_id) {
-	if (!isValid(group_id))
-		return null;
-	var room_creds = localStorage.getItem(_credentialRoomRecord + '_group_' + group_id);
-
-	if (!isValidString(room_creds))
-		return null;
-	room_creds = JSON.parse(room_creds);
-
-	return room_creds;
-
+function enterConfrencing() {
+        var room_page = isMobileDetected() ? 'mobile.html' : 'index.html';
+        MesiboLog('===========> openRoom', room_page, isMobileDetected());
+        window.open(room_page, '_self');
 }
 
 
-function _resetLoginCredentials() {
-	localStorage.removeItem(_credentialLoginRecord);
-}
-
-function _resetRoomCredentials(group_id) {
-	localStorage.removeItem(_credentialRoomRecord + '_group_' + group_id);
-}
-
-function logOut() {
-	_resetLoginCredentials();
-	window.open('login.html', '_self');
-}
-
-
-function _storeRoomCredentials(room) {
-	if (!isValid(room))
-		return -1;
-
-	var room_creds = {};
-
-	MesiboLog('room', room, room_creds);
-	//Check if all params are valid
-
-	if (isValidString(room['gid']))
-		room_creds.gid = room['gid'];
-
-	if (isValidString(room['name']))
-		room_creds.name = room['name'];
-
-	if (isValid(room['publish']))
-		room_creds.publish = room['publish'];
-
-	if (isValidString(room['type']))
-		room_creds.type = room['type'];
-
-	if (isValidString(room['spin']))
-		room_creds.spin = room['spin'];
-
-	if (isValidString(room['pin']))
-		room_creds.pin = room['pin'];
-
-	if (isValidString(room['resolution']))
-		room_creds.resolution = room['resolution'];
-	
-	room_creds.duration = 0;
-	if(room['duration'] != undefined){
-		try{
-			room_creds.duration = parseInt(room['duration']);
-		}
-		catch(e){
-		
-		}
-	}
-
-	room_creds.ts = Date.now();
-	if (isValid(room['ts']))
-		room_creds.ts = room['ts'];
-
-	if (isValid(init_room))
-		room_creds.init = init_room;
-
-	MesiboLog('room_creds', room_creds);
-
-	localStorage.setItem(_credentialRoomRecord + '_group_' + room_creds.gid, JSON.stringify(room_creds));
-	MesiboLog('_storeRoomCredentials', localStorage.getItem(_credentialRoomRecord + '_group_' + room_creds.gid));
-
-	return 0;
-}
-
-function loginCallback(r) {
+function loginCallback(result, resp) {
 	document.getElementById('login-button').disabled = false;
 	document.getElementById('login-spinner').style.display = 'none';
 
-	var resp = JSON.parse(r);
 	console.log(resp);
 	var token = resp['token'];
-	
-  if (resp.result == 'OK') {
+
+	if (result) {
 		isLoginValid = true;
 
-		gLoginEmail = document.getElementById('email').value;
+		gLoginPhone = document.getElementById('phone').value;
 
 		document.getElementById('name').readOnly = true;
-		document.getElementById('email').readOnly = true;
-		document.getElementById('email-otp-prompt').innerHTML = 'Enter the OTP sent to ' + gLoginEmail;
+		document.getElementById('phone').readOnly = true;
+		document.getElementById('email-otp-prompt').innerHTML = 'Enter the OTP for ' + gLoginPhone;
+		if(resp.message && resp.message.length > 8) {
+			document.getElementById('otp-message').innerHTML = resp.message;
+			document.getElementById('otp-message').style.display = 'block';
+		} else {
+			document.getElementById('otp-message').style.display = 'none';
+		}
 		document.getElementById('otp-input').style.display = 'block';
 		document.getElementById('otp').innerHTML = '';
 
 		if (isValidString(token)) {
 			console.log('Login Successful');
 
-			resp.email = gLoginEmail;
-			_storeLoginCredentials(resp);
+			resp.phone = gLoginPhone;
 			hideLoginScreen();
-			showJoinRoomScreen();
+			enterConfrencing();
 		}
 	}
 	else {
-		_displayError('Login Failed: Please try again with a valid email & OTP');
+		_displayError('Login Failed: Please try again with a valid phone & OTP');
 		document.getElementById('name').readOnly = false;
-		document.getElementById('email').readOnly = false;
+		document.getElementById('phone').readOnly = false;
 	}
 }
 
 function clearLoginEntry() {
 	document.getElementById('name').value = '';
-	document.getElementById('email').value = '';
-}
-
-function showLoginScreen() {
-	var login = document.getElementById('main-login-form');
-	if(login)
-		login.style.display = 'block';
-	clearLoginEntry();
+	document.getElementById('phone').value = '';
 }
 
 function hideLoginScreen() {
@@ -347,570 +143,6 @@ function hideLoginScreen() {
 	if(login)
 		login.style.display = 'none';
 	clearLoginEntry();
-}
-
-function clearRoomEntry() {
-	document.getElementById('roomid').value = '';
-	document.getElementById('roomname').value = '';
-	document.getElementById('roompin').value = '';
-}
-
-function showJoinRoomScreen() {
-	var room = document.getElementById('main-room-form');
-	if(room)
-		room.style.display = 'block';
-	clearRoomEntry();
-}
-
-function hideJoinRoomScreen() {
-	var room = document.getElementById('main-room-form');
-	if(room)
-		room.style.display = 'none';
-	clearRoomEntry();
-}
-
-function loadLoginWindow() {
-	showLoginScreen();
-}
-
-function _storeCredentialItem(key, value) {
-	if (!isValidString(key))
-		return -1;
-	if (!isValid(value))
-		return -1;
-	localStorage.setItem(key, value);
-
-	return 0;
-}
-
-function getTokenFromStorage() {
-	var token = '';
-	var login = localStorage.getItem(_credentialLoginRecord);
-	if (!isValidString(login))
-		return '';
-
-	login = JSON.parse(login);
-
-	if (isValidString(login['token']))
-		token = login['token'];
-
-	return token;
-}
-
-function enterRoomForm(e) {
-	if (! e.value == 'enter')
-		return;
-	console.log('enterRoomForm');
-	document.getElementById('room_id_div').style.display = 'block';
-	document.getElementById('roomid').value = '';
-	document.getElementById('roompin').value = '';
-	document.getElementById('room_name_div').style.display = 'none';
-	document.getElementById('room_password_div').style.display = 'block';
-	document.getElementById('stream-quality-options').style.display = 'none';
-	document.getElementById('room_password_label').innerHTML = 'Enter Pin';
-	document.getElementById('join-room-button-text').innerHTML = 'Enter Room';
-	document.getElementById('join-room-button').setAttribute('onclick', 'enterRoom()');
-	// console.log(document.getElementById("join-room-button"));
-
-	document.getElementById('my-rooms-button').style.display = 'inline-block';
-	document.getElementById('my-rooms-button').setAttribute('onclick', 'showMyRooms()');
-	document.getElementById('my-rooms-button-text').innerHTML = 'My Rooms';
-}
-
-function createRoomForm(e) {
-	if (! e.value == 'create')
-		return;
-	console.log('createRoomForm');
-	document.getElementById('room_id_div').style.display = 'none';
-	document.getElementById('my-rooms-list').style.display = 'none';
-	document.getElementById('roomname').value = '';
-	document.getElementById('roompin').value = '';
-	document.getElementById('room_name_div').style.display = 'block';
-	document.getElementById('stream-quality-options').style.display = 'flex';
-	document.getElementById('room_password_div').style.display = 'none';
-	document.getElementById('join-room-button-text').innerHTML = 'Create Room';
-	document.getElementById('quality-default').checked = true;
-	document.getElementById('join-room-button').setAttribute('onclick' , 'createRoom()');
-
-	document.getElementById('my-rooms-button').style.display = 'none';
-
-	// console.log(document.getElementById("join-room-button"))
-
-}
-
-
-
-function _getRoomName() {
-	var roomname = document.getElementById('roomname').value;
-	return roomname;
-}
-
-function _getRoomId() {
-	var roomid = document.getElementById('roomid').value;
-	return roomid;
-}
-
-function _getRoomPin() {
-	var roompin = document.getElementById('roompin').value;
-	return roompin;
-}
-
-//Get the chosen quality level- default/qvga/vga/hd/fhd
-function _getRoomQuality() {
-	var room_quality = document.querySelector('input[name = "optquality"]:checked').value;
-	if (!isValidString(room_quality))
-		return null;
-
-	console.log('=====> Chosen room quality', room_quality);
-
-
-	switch (room_quality) {
-		case 'default':
-			room_quality = STREAM_RESOLUTION_DEFAULT;
-			break;
-		case 'qvga':
-			room_quality = STREAM_RESOLUTION_QVGA;
-			break;
-		case 'vga':
-			room_quality = STREAM_RESOLUTION_VGA;
-			break;
-		case 'hd':
-			room_quality = STREAM_RESOLUTION_HD;
-			break;
-		case 'fhd':
-			room_quality = STREAM_RESOLUTION_FHD;
-			break;
-		case 'uhd':
-			room_quality = STREAM_RESOLUTION_UHD;
-			break;
-	}
-
-	return room_quality;
-
-}
-
-
-function _getToken() {
-	var stored_token = getTokenFromStorage();
-	if (isValidString(stored_token)) {
-		return stored_token;
-	}
-
-	return ''; //No valid token present in config or local storage
-}
-
-function openRoom(groupid) {
-	if (!isValid(groupid) || groupid <= 0)
-		return -1;
-
-	var room_page = isMobileDetected() ? 'mobile.html' : 'index.html';
-	MesiboLog('===========> openRoom', room_page, isMobileDetected());
-	window.open(room_page + '?room=' + groupid, '_self');
-}
-
-function enterRoomCallback(r) {
-	document.getElementById('join-room-button').disabled = false;
-	document.getElementById('join-room-spinner').style.display = 'none';
-
-	var resp = JSON.parse(r);
-
-	if ('OK' == resp.result) {
-		MesiboLog('Enter Room Successful');
-		console.log(resp);
-
-    MesiboLog(resp);
-		toastr.success('Enter Room Successful');
-
-		var rv = _storeRoomCredentials(resp);
-		MesiboLog(rv);
-		if (-1 == rv || !isValid(rv)) {
-			_displayError('Unable to store room');
-			return -1;
-		}
-
-
-		hideJoinRoomScreen();
-		openRoom(resp.gid);
-	}
-	else {
-		MesiboLog(resp);
-		_resetRoomCredentials(resp.gid);
-		if ('AUTHFAIL' == resp.error) {
-			_resetLoginCredentials();
-			_displayError('Auth Failed');
-			hideJoinRoomScreen();
-			showLoginScreen();
-		}
-		else
-			_displayError('Enter Room Failed. Please enter valid Room-ID and pin');
-	}
-}
-
-
-function enterRoom(room) {
-  MesiboLog("enterRoom", room);
-
-	if (!room) {
-		room = {};
-		room.gid = _getRoomId();
-
-		room.pin = _getRoomPin();
-	}
-
-	if (!isValidString(room.gid)) {
-		toastr.error('Invalid room id', 'Enter Room');
-		return -1;
-	}
-
-	if (!isValid(room.pin)) {
-		toastr.error('Invalid pin', 'Enter Room');
-		return -1;
-	}
-
-	room.token = _getToken();
-	if (!isValidString(room.token)) {
-		toastr.error('Invalid access token', 'Enter Room');
-		_resetLoginCredentials();
-		window.open('login.html', '_self');
-		return -1;
-	}
-
-	document.getElementById('join-room-button').disabled = true;
-	document.getElementById('join-room-spinner').style.display = 'inline-block';
-
-	grecaptcha.ready(function() {
-		grecaptcha.execute(MESIBO_CAPTCHA_TOKEN, {action: 'login'}).then(function(token) {
-			// MesiboLog(token);
-			if (!isValidString(token)) {
-				_displayError('Invalid captcha');
-				return -1;
-			}
-
-			MesiboLog(MESIBO_API_BACKEND + '?token=' + room.token + '&op=joingroup&gid=' + room.gid + '&pin=' + room.pin + '&captcha=' + token);
-			
-      var request = 'token=' + room.token + '&op=joingroup&gid=' + room.gid + '&pin=' + room.pin + '&captcha=' + token;
-
-			sendRequest(MESIBO_API_BACKEND, enterRoomCallback, request);
-
-		});
-	});
-
-}
-
-function createRoomCallback(r) {
-	document.getElementById('join-room-button').disabled = false;
-	document.getElementById('join-room-spinner').style.display = 'none';
-
-	MesiboLog(r);
-	var resp = JSON.parse(r);
-	MesiboLog(resp);
-
-	if ('OK' == resp.result) {
-		MesiboLog('Create Room Successful');
-		MesiboLog(resp);
-		
-    toastr.success('Create Room Successful');
-		var rv = _storeRoomCredentials(resp);
-		MesiboLog(rv);
-		if (-1 == rv || !isValid(rv)) {
-			_displayError('Unable to store room');
-			return -1;
-		}
-
-		hideJoinRoomScreen();
-		openRoom(resp.gid);
-	}
-	else {
-		MesiboLog(resp);
-		_resetRoomCredentials(resp.gid);
-		if ('AUTHFAIL' == resp.error) {
-			_resetLoginCredentials();
-			_displayError('Authorization Failed');
-			hideJoinRoomScreen();
-			showLoginScreen();
-
-		}
-		else
-			_displayError('Create Room Failed');
-	}
-}
-
-function createRoom() {
-	MesiboLog('createRoom');
-
-	var room = {};
-	room.token = _getToken();
-	if (!isValidString(room.token)) {
-		toastr.error('Invalid access token', 'Create Room');
-		_resetLoginCredentials();
-		if (isMobileDetected())
-			window.open('mobile.html', '_self');
-		else
-			window.open('index.html', '_self');
-		return -1;
-	}
-
-
-	room.name = _getRoomName();
-	if (!isValidString(room.name)) {
-		toastr.error('Enter valid room name', 'Create Room');
-		return -1;
-	}
-
-
-	room.quality = _getRoomQuality();
-	if (!isValid(room.quality)) {
-		room.quality = STREAM_RESOLUTION_DEFAULT;
-	}
-	
-	room.type = 0;
-
-	document.getElementById('join-room-button').disabled = true;
-	document.getElementById('join-room-spinner').style.display = 'inline-block';
-
-	grecaptcha.ready(function() {
-		grecaptcha.execute(MESIBO_CAPTCHA_TOKEN, {action: 'login'}).then(function(token) {
-			// MesiboLog(token);
-			if (!isValidString(token)) {
-				_displayError('Invalid captcha');
-				return -1;
-			}
-
-			MesiboLog(MESIBO_API_BACKEND+"?token=" + room.token +"&op=setgroup&name=" + room.name + "&type=" + room.type+ "&resolution=" + room.quality + "&pin=" + room.pin+ "&captcha=" + token);
-			var request = 'token=' + room.token + '&op=setgroup&name=' + room.name + '&resolution=' + room.quality + '&captcha=' + token;
-
-			sendRequest(MESIBO_API_BACKEND, createRoomCallback, request);
-
-		});
-	});
-
-}
-
-function hideRooms() {
-	document.getElementById('my-rooms-button-text').innerHTML = 'My Rooms';
-	document.getElementById('room_id_div').style.display = 'block';
-	document.getElementById('room_password_div').style.display = 'block';
-	document.getElementById('my-rooms-button').setAttribute('onclick' , 'showMyRooms()');
-	document.getElementById('my-rooms-list').style.display = 'none';
-}
-
-function selectRoom(i) {
-	if (!isValid(i) || i < 0 || !myRooms.length || i > myRooms.length - 1) {
-		return;
-	}
-
-	var r = myRooms[i];
-
-	var enter_room_button = document.getElementById('join-room-button');
-	enter_room_button.setAttribute('onclick', 'enterSelectedRoom(' + i + ')');
-
-}
-
-function enterSelectedRoom(i) {
-  
-	if (!isValid(i) || i < 0 || !myRooms.length || i > myRooms.length - 1) {
-		return;
-	}
-
-	var room = myRooms[i];
-  MesiboLog("enterSelectedRoom", i, room);
-
-  if (!isValid(room))
-		return -1;
-
-	if (!isValid(room.gid) || !isValid(room.pin) || !isValid(room.spin))
-		return -1; //You can enter room only as a creator of the room. If you are creator, then you have both pin & spin
-
-	enterRoom(room);
-}
-
-function displayRoomsList(rooms, count) {
-	if (!isValid(count) || count <= 0)
-		return;
-
-	if (!isValid(rooms) || !isValid(rooms.length) || rooms.length <= 0)
-		return;
-
-	var room_list = document.getElementById('my-rooms-list');
-	if (!isValid(room_list))
-		return;
-
-	room_list.innerHTML = null;
-	for (var i = 0; i < count; i++) {
-		var r = rooms[i];
-		var room_item = document.createElement('BUTTON');
-		room_item.type = 'button';
-		room_item.className = 'list-group-item list-group-item-action';
-
-		if(rooms[i].pin && rooms[i].spin){
-			room_item.innerHTML = '[Host] Room #' + rooms[i].gid + ': ' + rooms[i].name;
-			room_item.setAttribute('style', 'text-overflow: ellipsis;white-space: nowrap;overflow: hidden; background-color: #f9f9f9');
-		}
-		else{
-			room_item.innerHTML = 'Room #' + rooms[i].gid + ': ' + rooms[i].name;
-			room_item.setAttribute('style', 'text-overflow: ellipsis;white-space: nowrap;overflow: hidden;');
-		}
-
-		room_item.setAttribute('onclick', 'selectRoom(' + i + ')');
-		room_item.setAttribute('ondblclick', 'enterSelectedRoom(' + i + ')');
-
-
-		room_list.append(room_item);
-	}
-
-}
-
-function disableShowRooms() {
-	document.getElementById('my-rooms-button').disabled = true;
-}
-
-function showRoomsCallback(r) {
-	document.getElementById('my-rooms-button').disabled = false;
-	document.getElementById('my-rooms-spinner').style.display = 'none';
-
-	var resp = JSON.parse(r);
-  console.log(resp);
-
-	if ('OK' == resp.result) {
-		if (resp.count == 0) {
-			_displayError('There are no rooms created by you');
-			return -1;
-		}
-
-		if (!isValid(resp.rooms) || resp.rooms.length <= 0) {
-			_displayError('An error occured while fetching your rooms');
-			return -1;
-		}
-
-		myRooms = resp.rooms;
-
-		document.getElementById('my-rooms-button-text').innerHTML = 'Other Room';
-		document.getElementById('my-rooms-button').setAttribute('onclick' , 'hideRooms()');
-
-
-		document.getElementById('room_id_div').style.display = 'none';
-		document.getElementById('room_password_div').style.display = 'none';
-
-		document.getElementById('my-rooms-list').style.display = 'block';
-
-		displayRoomsList(resp.rooms, resp.count);
-
-	}
-	else {
-		MesiboLog(resp);
-		if ('AUTHFAIL' == resp.error) {
-			_resetLoginCredentials();
-			_displayError('Authorization Failed');
-			hideJoinRoomScreen();
-			showLoginScreen();
-
-		}
-		else
-			_displayError('Unable to show your rooms');
-	}
-}
-
-function showMyRooms() {
-	MesiboLog('showMyRooms');
-	// return;
-
-	var room = {};
-	room.token = _getToken();
-	if (!isValidString(room.token)) {
-		toastr.error('Invalid access token', 'Create Room');
-		_resetLoginCredentials();
-		window.open('login.html', '_self');
-		return -1;
-	}
-
-	document.getElementById('my-rooms-button').disabled = true;
-	document.getElementById('my-rooms-spinner').style.display = 'inline-block';
-
-	var request = 'token=' + room.token + '&op=rooms';
-	sendRequest(MESIBO_API_BACKEND, showRoomsCallback, request);
-
-	return;
-
-}
-
-
-function _getInviteeName() {
-	var name = document.getElementById('invitee-name').value;
-	return name;
-}
-
-function _getInviteeEmail() {
-	var email = document.getElementById('invitee-email').value;
-	var mailformat = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-	if (!isValidString(email) || mailformat.test(email) == false) {
-		return email = '';
-	}
-
-	return email;
-}
-
-function _getInviteePublishType() {
-
-	var publish_type = document.querySelector('input[name = "optpublish"]:checked').value;
-	if (!isValid(publish_type))
-		return -1;
-
-	if (publish_type == 'publish')
-		return PARTICIPANT_CAN_PUBLISH;
-
-	if (publish_type == 'view')
-		return PARTICIPANT_CAN_VIEW;
-
-}
-
-
-function showInviteForm() {
-	$('#ModalInviteForm').modal('show');
-}
-
-function closeInviteForm() {
-	$('#ModalInviteForm').modal('hide');
-}
-
-function showSelfInfoForm() {
-	$('#ModalSelfInfo').modal('show');
-}
-
-function closeSelfInfoForm() {
-	$('#ModalSelfInfo').modal('hide');
-}
-
-function toggleDefualtAudioMute() {
-	init_room.audio = !init_room.audio;
-	if (init_room.audio) {
-		document.getElementById('default_audio_init').style.color = 'green';
-		document.getElementById('default_audio_init').className = 'fas fa-microphone';
-		document.getElementById('default_audio_init').title = 'Audio Enabled';
-		toastr.warning('Audio Enabled');
-	}
-	else {
-		document.getElementById('default_audio_init').style.color = 'red';
-		document.getElementById('default_audio_init').className = 'fas fa-microphone-slash';
-		document.getElementById('default_audio_init').title = 'Audio Disabled';
-		toastr.warning('Audio Disabled');
-	}
-
-}
-
-function toggleDefaultVideoMute() {
-	init_room.video = !init_room.video;
-	if (init_room.video) {
-		document.getElementById('default_video_init').style.color = 'green';
-		document.getElementById('default_video_init').className = 'fas fa-video';
-		document.getElementById('default_audio_init').title = 'Video Enabled';
-		toastr.warning('Video Enabled');
-	}
-	else {
-		document.getElementById('default_video_init').style.color = 'red';
-		document.getElementById('default_video_init').className = 'fas fa-video-slash';
-		document.getElementById('default_audio_init').title = 'Video Disabled';
-		toastr.warning('Video Disabled');
-	}
 }
 
 // disable mousewheel on a input number field when in focus

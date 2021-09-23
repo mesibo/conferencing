@@ -19,18 +19,18 @@ It is recommended that you first look at [basic demo](https://github.com/mesibo/
 
 We have also hosted the same code at [https://mesibo.com/livedemo](https://mesibo.com/livedemo) so that you can quickly try it out. 
 
-### Configuring the backend
+### OTP for Demo App
+Mesibo Demo Apps (Messenger, Conferencing, etc.) require a phone number and OTP to log in. However, mesibo does not send OTP. Instead, you can instantly create OTP for yourself and your users from the [mesibo console](https://mesibo.com/console).
 
-If you want to setup your backend for the conferencing app, refer to the [backend](https://github.com/mesibo/conferencing/tree/master/live-demo/backend) and modify [config.js](https://github.com/mesibo/conferencing/blob/master/live-demo/web/mesibo/config.js) accordingly.
-
-If you choose not to setup the backend, you can use the Mesibo API backend at `https://app.mesibo.com/conf/api.php` and use the default configuration in [config.js](https://github.com/mesibo/conferencing/blob/master/live-demo/web/mesibo/config.js)
+### Configuring Demo to Send OTP Automatically
+If you are using demo for your users, you should be able to send then OTP automatically. It is easy. Download the login backend and host it on your server, refer to the [backend](https://mesibo.com/documentation/tutorials/open-source-whatsapp-clone/backend/#sending-otp-to-your-users) for instructions. You will also need to modify [config.js](https://github.com/mesibo/conferencing/blob/master/live-demo/web/mesibo/config.js) to point to your backend.
 
 # Building a Conferencing app 
 
 ### Prerequisites
 
 - The demo app uses the Mesibo Javascript SDK. So, install Mesibo Javscript SDK by following the instructions [here](https://mesibo.com/documentation/install/javascript/)
-- Familiar with Mesibo [User and Group Management APIs](https://mesibo.com/documentation/api/backend-api/#group-management-apis)
+- Familiar with Mesibo [Group Management APIs](https://mesibo.com/documentation/api/real-time-api/groups/)
 - Familiar with the basic concepts Mesibo APIs for streaming and conferencing. It is recommended that you first look at the [basic demo](https://github.com/mesibo/conferencing/tree/master/basic-demo) to familiarize yourself with API before diving into live-demo.
 - A web server with HTTPS and PHP support. We assume that your hostname is example.com and the backend is accessible via URL https://example.com/api.php over a **secure connection**
 - Camera and Microphone access. Please ensure you have  set up  camera and microphone devices and granted the required permissions in the browser
@@ -50,7 +50,6 @@ In this document, we will be using the following terms
 - Subscriber - The participant viewing other's voice and video stream 
 
 
-
 ### Basic requirements for conferecing
 
 1. A conference room which people can join
@@ -64,32 +63,24 @@ In this document, we will be using the following terms
 The conference room is a group. We will use REST APIs to perform the operations to create a group and join a group on Mesibo backend. Only the members of a group will be able to view the streams of other members of the same group.
 
 ### User Login
-In the demo app, the user registers with a name and email. 
+In the demo app, the user registers with a name and cwphoneemail. 
 
-Then the app makes a request to mesibo backend with the following parameters to send an OTP to the email entered.
+Then the app makes a request to the demo backend with the following payload to send an OTP:
 ```
-https://example.com/api.php?op=login&appid=APP_ID&name=NAME&email=USER_EMAIL
+{op: "login", phone: "18005551234", appid: "com.messenger.appid"}
 ```
 
-The user will now need to enter the OTP received which is sent to the backend for verification with the following request
+The user will now need to enter the OTP received which is sent to the backend for verification with the following payload
 
 ```
-https://example.com/api.php?op=login&appid=APP_ID&name=NAME&email=USER_EMAIL&code=OTP_RECEIVED
+{op: "login", phone: "18005551234", appid: "com.messenger.appid", otp: "123456"}
+
 ```
 If the entered OTP matches, the backend generates a token for that user. The token is stored locally.
 
 
 ### Creating a Room
 For a conference room, The creator of the room will configure all the room properties such as the room name, quality settings, etc.
-
-```javascript
-const STREAM_RESOLUTION_DEFAULT = 0;
-const STREAM_RESOLUTION_QVGA = 1;
-const STREAM_RESOLUTION_VGA = 2;
-const STREAM_RESOLUTION_HD = 3;
-const STREAM_RESOLUTION_FHD = 4;
-const STREAM_RESOLUTION_UHD = 5;
-```
 
 The room is created by sending a request to the mesibo backend, in the following format:
 ```
