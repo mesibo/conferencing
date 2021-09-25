@@ -101,6 +101,7 @@
     MesiboGroupSettings *settings = [MesiboGroupSettings new];
     settings.name = _mRoom.text;
     settings.videoResolution = r.resolution;
+    settings.callFlags = MESIBO_GROUPCALLFLAG_VIDEO | MESIBO_GROUPCALLFLAG_AUDIO;
     [MesiboInstance createGroup:settings listener:self];
 }
 

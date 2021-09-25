@@ -198,13 +198,13 @@ public class JoinRoomActivity extends AppCompatActivity implements Mesibo.GroupL
 
         /* video room without audio does not make sense */
         if(mVideo) {
-           settings.flags = MESIBO_GROUPCALLFLAG_VIDEO | MESIBO_GROUPCALLFLAG_AUDIO;
+           settings.callFlags = MESIBO_GROUPCALLFLAG_VIDEO | MESIBO_GROUPCALLFLAG_AUDIO;
         }
         else if(mAudio) {
-           settings.flags = MESIBO_GROUPCALLFLAG_AUDIO;
+           settings.callFlags = MESIBO_GROUPCALLFLAG_AUDIO;
         }
 
-        settings.flags |= MESIBO_GROUPCALLFLAG_SCREEN | MESIBO_GROUPCALLFLAG_TALKING;
+        settings.callFlags |= MESIBO_GROUPCALLFLAG_SCREEN | MESIBO_GROUPCALLFLAG_TALKING;
 
         Mesibo.createGroup(settings, this);
     }
