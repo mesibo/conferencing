@@ -406,7 +406,8 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
     }
 
     public void onBackPressed() {
-        mGroupcall.leave();
+        if(null != mGroupcall)
+        	mGroupcall.leave();
     }
 
     public static int getParticipantPosition(ArrayList<MesiboCall.MesiboParticipant> pl, MesiboCall.MesiboParticipant p) {
@@ -457,7 +458,7 @@ public class GroupCallFragment extends Fragment implements MesiboCall.GroupCallL
         //vh = mViewHolders.poll();
         vh = null;
         if(null == vh ) {
-            vh = new ParticipantViewHolder(getActivity(), this);
+            vh = new ParticipantViewHolder(getActivity(), this, mGroupcall);
         }
 
         mStreams.add(vh);

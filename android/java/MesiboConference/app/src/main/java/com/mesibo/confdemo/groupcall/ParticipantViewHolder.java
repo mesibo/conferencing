@@ -47,10 +47,13 @@ public class ParticipantViewHolder implements View.OnClickListener {
     ImageButton messageButton;
     ImageButton hangupButton;
 
+    private MesiboCall.MesiboGroupCall mGroupcall = null;
+    private boolean mAdminMode = false;
 
     private final View mView;
-    public ParticipantViewHolder(Context context, Listener listener) {
+    public ParticipantViewHolder(Context context, Listener listener, MesiboCall.MesiboGroupCall groupCall) {
         LayoutInflater inflater1 = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mGroupcall = groupCall;
         mListener = listener;
         mView = inflater1.inflate(R.layout.participant_layout, null);
 
@@ -188,16 +191,32 @@ public class ParticipantViewHolder implements View.OnClickListener {
     }
 
     private void onToggleStreamAudioMute(View view){
-        mStream.toggleAudioMute();
+        boolean status;
+        if(mAdminMode) {
+            MesiboCall.MesiboParticipantAdmin admin = mStream.getAdmin();
+            if(null == admin) return;
+            status = admin.toggleAudioMute();
+        } else {
+            mStream.toggleAudioMute();
+            status = mStream.getMuteStatus(false);
+        }
 
-        int id = mStream.getMuteStatus(false)?R.drawable.ic_mesibo_mic_off:R.drawable.ic_mesibo_mic;
+        int id = status?R.drawable.ic_mesibo_mic_off:R.drawable.ic_mesibo_mic;
         view.setBackgroundResource(id);
     }
 
     private void onToggleStreamVideoMute(View view){
-        mStream.toggleVideoMute();
+        boolean status;
+        if(mAdminMode) {
+            MesiboCall.MesiboParticipantAdmin admin = mStream.getAdmin();
+            if(null == admin) return;
+            status = admin.toggleVideoMute();
+        } else {
+            mStream.toggleVideoMute();
+            status = mStream.getMuteStatus(false);
+        }
 
-        int id = mStream.getMuteStatus(true)?R.drawable.ic_mesibo_videocam_off:R.drawable.ic_mesibo_videocam;
+        int id = status?R.drawable.ic_mesibo_videocam_off:R.drawable.ic_mesibo_videocam;
         view.setBackgroundResource(id);
 
     }
@@ -215,6 +234,12 @@ public class ParticipantViewHolder implements View.OnClickListener {
     }
 
     private void onStreamHangup(View view){
+        if(mAdminMode) {
+            MesiboCall.MesiboParticipantAdmin admin = mStream.getAdmin();
+            if (null == admin) return;
+            admin.hangup();
+            return;
+        }
         mListener.ParticipantViewHolder_onHangup(getParticipant());
     }
 
@@ -281,6 +306,21 @@ public class ParticipantViewHolder implements View.OnClickListener {
         }
     }
 
+    private void setButtonColors(boolean admin) {
+        if(admin) {
+            int color = Color.argb(200, 200, 0, 0);
+            toggleAudioMuteButton.setColorFilter(color);
+            toggleVideoMuteButton.setColorFilter(color);
+            hangupButton.setColorFilter(color);
+            toggleFullScreenButton.setColorFilter(color);
+        } else {
+            toggleAudioMuteButton.clearColorFilter();
+            toggleVideoMuteButton.clearColorFilter();
+            hangupButton.clearColorFilter();
+            toggleFullScreenButton.clearColorFilter();
+        }
+
+    }
     public void setStreamControls(){
         if(!mFullScreen) {
             if (mStream.isMe()) {
@@ -307,16 +347,31 @@ public class ParticipantViewHolder implements View.OnClickListener {
         mVideoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mAdminMode = false;
                 int visible = mControls.getVisibility();
-                if(visible == View.GONE)
+                if(visible == View.GONE) {
+                    setButtonColors(false);
                     mControls.setVisibility(View.VISIBLE);
+                }
                 else
                     mControls.setVisibility(View.GONE);
             }
         });
 
+        mVideoView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
 
+                if(!mGroupcall.hasAdminPermissions(false)) return true;
 
+                if (mStream.isMe()) return true;
+
+                mAdminMode = true;
+                setButtonColors(true);
+                mControls.setVisibility(View.VISIBLE);
+                return true;
+            }
+        });
     }
 
 }

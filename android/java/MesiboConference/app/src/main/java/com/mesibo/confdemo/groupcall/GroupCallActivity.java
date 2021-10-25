@@ -67,7 +67,7 @@ public class GroupCallActivity extends MesiboCallActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        /* This should be teh first call before calling super.onCreate() */
+        /* This should be the first call before calling super.onCreate() */
         setGroupCallActivity();
 
         super.onCreate(savedInstanceState);
