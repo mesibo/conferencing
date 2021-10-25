@@ -249,6 +249,7 @@ let getFileIcon = (f) =>{
 
 }
 
+/*
 let getFileType = (f) =>{
 
 	var type = f.filetype;
@@ -281,7 +282,7 @@ let getFileType = (f) =>{
 	return fileType;
 
 }
-
+*/
 let isSentMessage = (status) =>{
 	if((status === MESIBO_MSGSTATUS_RECEIVEDREAD) || (status === MESIBO_MSGSTATUS_RECEIVEDNEW))
 		return false;
@@ -361,24 +362,33 @@ function textAreaAdjust(o) {
 	o.style.height = (25+o.scrollHeight)+"px";
 }
 
-window.onkeydown=function(event){
-	if(event.keyCode==13){
-		if(event.preventDefault) event.preventDefault(); 
-		return false;
-	}
+var crlPressed = false; 
+function isCtrlPressed() {
+	return crlPressed;
 }
 
+window.addEventListener("keydown", function(event){
+	if(event.keyCode == 17) {
+		crlPressed = true;
+	} else if(event.keyCode == 13) {
+		if(event.preventDefault) event.preventDefault(); 
 
+	}
+    },
+false);
 
-$(document).keyup(function(e) {
-	if (e.keyCode === 27){    // esc
+window.addEventListener('keyup', function(event){
+	if(event.keyCode == 17) {
+		crlPressed = false; 
+	}
+	else if (event.keyCode === 27){    // esc
 		MesiboLog('Hide permission prompt');
 		var prompt = getElementById('permissions-prompt');
 		if(prompt) 
 			prompt.style.display = 'none';
-	}
-});
-
+	} 
+    },
+false);
 
 function getParameterByName(name, url, defval){
 	MesiboLog('getParameterByName', name, url);

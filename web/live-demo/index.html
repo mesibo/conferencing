@@ -148,6 +148,12 @@
                     </span>
                 </a>
 
+		<a class="navbar-icon-with-label" style="width: 90px!important" ng-if="isAdmin()" ng-click="toggleAdminMode()" >
+                    <span class="fa fa-cogs action-icon" aria-hidden="true" ng-style ="{'color': admin_mode? '#FA8072':'white'}" style = "color: white; cursor:pointer;" ng-attr-title="{{ admin_mode? 'Disable Group Admin Mode': 'Enable Group Admin Mode' }}">
+                    <div style="font-size: 10px; padding-top: 5px; font-family: Helvetica; color: white";>Admin</div>
+                    </span>
+                </a>
+
                <a class="navbar-icon-with-label" ng-if="hasInvitePins()" ng-click="showInviteForm()">
                     <span class="fa fa-user-plus action-icon" aria-hidden="true"  style = "color: white; cursor:pointer;"  title="Invite Friends and Family">
                     <div style="font-size: 10px; padding-top: 5px; font-family: Helvetica">Invite</div>
@@ -397,14 +403,14 @@
                                     </div>  
 
                                   <div class="stream-options" style="top:2px; right:2px; position: absolute; background-color: hsl(0, 0%, 0%, 0.4); width: 30px;" ng-style="{'display': streams[$index].getMuteStatus(true) || streams[$index].getMuteStatus(false) ?'block':'', 'font-size': grid_mode >= 3 ? '10px' : '15px'}">
-                                    <a href="#" style="color: white; display: block;"><i ng-class="getAudioStatusClass(streams[$index])" ng-click="toggleRemoteMute(streams[$index], false);" ng-attr-title="{{ streams[$index].getMuteStatus(false) == false ? 'Mute Audio': 'Unmute Audio'}}" ></i></a>
-                                    <a href="#" style="color: white;display: block;" ><i ng-class="getVideoStatusClass(streams[$index])" ng-click="toggleRemoteMute(streams[$index], true);" ng-attr-title="{{ streams[$index].getMuteStatus(true) == false ? 'Mute Video': 'Unmute Video'}}"></i></a>
+				    <a href="#" ng-style="{'color': admin_mode?'red':'white'}" style="display: block;"><i ng-class="getAudioStatusClass(streams[$index])" ng-click="toggleRemoteMute(streams[$index], false);" ng-attr-title="{{ streams[$index].getMuteStatus(false) == false ? 'Mute Audio': 'Unmute Audio'}}" ></i></a>
+                                    <a href="#" ng-style="{'color': admin_mode?'red':'white'}" style="display: block;" ><i ng-class="getVideoStatusClass(streams[$index])" ng-click="toggleRemoteMute(streams[$index], true);" ng-attr-title="{{ streams[$index].getMuteStatus(true) == false ? 'Mute Video': 'Unmute Video'}}"></i></a>
 
                                     <a href="#" style="color: white;display: block;" ng-show="grid_mode!=1 && !streams[index].getMuteStatus(true) && !streams[index].getMuteStatus(true)" ><i ng-class="getExpandedScreenStatusClass(streams[$index])" ng-click="expandStream(streams[$index], true)" ng-attr-title="{{ streams[$index].isExpandedScreen? 'Compress': 'Expand'}}"></i></a>
 
                                     <a href="#" style="color: white;display: block;" ng-show="!streams[index].getMuteStatus(true) && !streams[index].getMuteStatus(true)"><i class="fas fa-expand" ng-click="openFullscreen('video-', getStreamId(streams[$index]), streams[$index])" title="Full Screen"></i></a>
                                      <a href="#" style="color: white;display: block;" ><i class="fas fa-comment-alt" ng-click="showPopupChat(streams[$index])" title="Chat"></i></a>
-                                    <a href="#" style="color: white;display: block;" ><i class="fa fa-times" ng-click="MesiboGroupcall_OnHangup(streams[$index], MESIBOCALL_HANGUP_REASON_USER)" title="Hangup"></i></a>
+                                    <a href="#" ng-style="{'color': admin_mode?'red':'white'}" style="display: block;" ><i class="fa fa-times" ng-click="hangup(streams[$index])" title="Hangup"></i></a>
                                   </div>
                                   </div>
                         </div>
@@ -985,8 +991,15 @@
    <script type="text/javascript">
 
 	   if(isMobileDetected()){
-		   alert('For a better experience using the Sample Conferencing App, it is recommended that you use it on a desktop. The native mobile version, for Android & iOS is currently under development.');
-		   window.open("mobile.html","_self");
+		   if(navigator.userAgent.toLowerCase().indexOf("android") > -1) {
+			   window.location.href = 'https://play.google.com/store/apps/details?id=com.mesibo.mesiboapplication';
+		   }
+		   else if(navigator.userAgent.toLowerCase().indexOf("iphone") > -1) {
+			   window.location.href = 'https://itunes.apple.com/us/app/mesibo-realtime-messaging-voice-video/id1222921751';
+		   } else {
+			   alert('For a better experience using the Sample Conferencing App, it is recommended that you use it on a desktop. The native mobile version, for Android & iOS is currently under development.');
+			   window.open("mobile.html","_self");
+		   }
 	   }
 
 if(isBrowserOutdated())

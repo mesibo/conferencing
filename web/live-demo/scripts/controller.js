@@ -150,8 +150,10 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 	const MIN_AUTO_GRID_TIMEOUT = 5000; //Return to grid mode if no one talks for 5 seconds 
 
 	$scope.display_names = true;
+	$scope.admin_mode = false;
 	$scope.group_messsage_notification = '';
 	$scope.display_names_placeholder = 'Hide Names';
+	$scope.admin_mode_placeholder = 'Enable Group Admin Mode';
 	$scope.participant_list_placeholder = 'Participants yet to join';
 	$scope.popup_grid_map = {};
 
@@ -220,6 +222,11 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		});
 	};
 
+	$scope.isAdmin = function() {
+		if(!$scope.live) return false;
+		return $scope.live.hasAdminPermissions(false);
+	}
+
 	$scope.toggleSelfVideo = function() {
 		$scope.publisher.toggleVideoMute();
 		if ($scope.publisher.getMuteStatus(true))
@@ -267,10 +274,21 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 			return;
 		}
 
-		if(video)
-			stream.toggleVideoMute();
-		else
-			stream.toggleAudioMute();
+		if($scope.admin_mode) {
+			var admin = stream.getAdmin();
+			if(!admin) return;
+			if(video)
+				admin.toggleVideoMute();
+			else
+				admin.toggleAudioMute();
+
+		} else {
+
+			if(video)
+				stream.toggleVideoMute();
+			else
+				stream.toggleAudioMute();
+		}
 
 
 		$scope.updateLocalMuteRecord(stream);		
@@ -364,6 +382,10 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		window.open('login.html', '_self');
 
 	};
+
+	$scope.showLogin = function() {
+		window.open('login.html', '_self');
+	}
 
 	$scope.exitRoom = function() {
 		$('#ModalExitForm').modal('hide');
@@ -553,9 +575,10 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		$scope.mesibo_connection_status = status;
 
 		if (MESIBO_STATUS_SIGNOUT == status) {
-			$scope.addTicker('You have been logged out');
-			alert('You have been logged out');
-			$scope.logout();
+			var msg = "You have signed in from another device";
+			$scope.addTicker(msg);
+			alert(msg);
+			$scope.showLogin();
 		}
 
 		if (MESIBO_STATUS_AUTHFAIL == status) {
@@ -685,6 +708,7 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		if(!joined){
 			$scope.removeParticipant(p);
 			$scope.addTicker(p.getName() + ' has left the room');
+			$scope.refresh();
 			return;
 		}
 
@@ -945,6 +969,16 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		return -1; //Screen not found
 	};
 
+	$scope.hangup = function(p) {
+		if($scope.admin_mode && !p.isLocal()) {
+			var admin = p.getAdmin();
+			if(admin) admin.hangup();
+			return;
+		}
+
+		$scope.MesiboGroupcall_OnHangup(p, MESIBOCALL_HANGUP_REASON_USER);
+	}
+
 	$scope.MesiboGroupcall_OnHangup = function(p, reason) {
 		MesiboLog('MesiboGroupcall_OnHangup', p, reason, p.isLocal());
 		if (p.isLocal()) {
@@ -962,6 +996,8 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 			$scope.refresh();
 			return;
 		}
+
+		if(!reason) reason = MESIBOCALL_HANGUP_REASON_USER;
 
 		for (var i = 0; i < $scope.streams.length; i++) {
 			if ($scope.streams[i] === p) {
@@ -1282,6 +1318,15 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		});				
 
 	}
+
+	$scope.toggleAdminMode = function() {
+		$scope.admin_mode = !$scope.admin_mode;
+		if ($scope.display_names)
+			$scope.admin_mode_placeholder = 'Disable Group Admin Mode';
+		else
+			$scope.admin_mode_placeholder = 'Enable Group Admin Mode';
+		$scope.refresh();
+	};
 
 	$scope.toggleNameDisplay = function() {
 		$scope.display_names = !$scope.display_names;
