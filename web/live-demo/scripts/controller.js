@@ -1201,7 +1201,8 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		if(!s)
 			return;
 
-		if($scope.publisher.getId() == s.getId())
+		// user may not have permission to publish
+		if($scope.publisher && $scope.publisher.getId() == s.getId())
 			return 'You';
 
 		var name = getStreamName(s);
