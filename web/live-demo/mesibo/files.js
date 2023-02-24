@@ -41,18 +41,18 @@
  *
  *
  */
-function MesiboFile(s) {
+function MesiboDemoFile(s) {
 	this.scope = s;
 	this.api = {};
 	this.init();
 }
 
-MesiboFile.prototype.init = function() {
+MesiboDemoFile.prototype.init = function() {
 	this.api = this.scope.getMesibo();
 };
 
 
-MesiboFile.prototype.getFileType = function(filename) {
+MesiboDemoFile.prototype.getFileType = function(filename) {
 	const MESIBO_FILETYPE_IMAGE = 1;
 	const MESIBO_FILETYPE_VIDEO = 2;
 	const MESIBO_FILETYPE_AUDIO = 3;
@@ -69,7 +69,7 @@ MesiboFile.prototype.getFileType = function(filename) {
 };
 
 //Send files like image, video, documents, etc
-MesiboFile.prototype.sendFile = function(pFileType, pFileurl, pThumbnail, peer, groupid) {
+MesiboDemoFile.prototype.sendFile = function(pFileType, pFileurl, pThumbnail, peer, groupid) {
 
 	var m = {};
 	m.id = this.api.random();
@@ -92,7 +92,7 @@ MesiboFile.prototype.sendFile = function(pFileType, pFileurl, pThumbnail, peer, 
 
 };
 
-MesiboFile.prototype.dataURItoBlob = function(dataURI) {
+MesiboDemoFile.prototype.dataURItoBlob = function(dataURI) {
 	// convert base64 to raw binary data held in a string
 	// doesn't handle URLEncoded DataURIs
 	var byteString = atob(dataURI.split(',')[1]);
@@ -118,7 +118,7 @@ MesiboFile.prototype.dataURItoBlob = function(dataURI) {
 	return blob;
 
 };
-MesiboFile.prototype.sendResizedImage = function(file, max_width, max_height, imageEncoding, imgUrl, peer, groupid) {
+MesiboDemoFile.prototype.sendResizedImage = function(file, max_width, max_height, imageEncoding, imgUrl, peer, groupid) {
 	var fileLoader = new FileReader() ,
 		canvas = document.createElement('canvas') ,
 		context = null ,
@@ -192,7 +192,7 @@ MesiboFile.prototype.sendResizedImage = function(file, max_width, max_height, im
 
 
 
-MesiboFile.prototype.uploadSendFile = async function(peer, groupid) {
+MesiboDemoFile.prototype.uploadSendFile = async function(peer, groupid) {
 	MesiboLog('uploadSendFile', peer, groupid);
 	if (!isValidString(peer) && !isValid(groupid))
 		return; //Neither a valid one-to-one to group message
@@ -232,7 +232,7 @@ MesiboFile.prototype.uploadSendFile = async function(peer, groupid) {
 
 }
 
-MesiboFile.prototype.sendWithThumbnail = function(blob, imgUrl, peer, groupid) {
+MesiboDemoFile.prototype.sendWithThumbnail = function(blob, imgUrl, peer, groupid) {
 	const mesiboFileCtx = this;
 	var reader = new FileReader();
 	reader.onloadend = function() {

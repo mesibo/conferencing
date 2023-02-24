@@ -570,7 +570,7 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		return false;
 	};
 
-	$scope.Mesibo_OnConnectionStatus = function(status) {
+	$scope.Mesibo_onConnectionStatus = function(status) {
 		MesiboLog('MesiboNotify.prototype.Mesibo_OnConnectionStatus: ' + status);
 		$scope.mesibo_connection_status = status;
 
@@ -612,7 +612,7 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		$scope.refresh();
 	};
 
-	$scope.Mesibo_OnMessage = function(m, data) {
+	$scope.Mesibo_onMessage = function(m) {
 		MesiboLog('Mesibo_onMessage');		
 
 		if(m && m.type === TYPE_CANVAS_MESSAGE && m.groupid && m.message){
@@ -676,13 +676,16 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 
 	};
 
-	$scope.Mesibo_OnMessageStatus = function(m) {
+	$scope.Mesibo_onMessageStatus = function(m) {
 		MesiboLog('MesiboNotify.prototype.Mesibo_OnMessageStatus: from ' + m.peer +
 			' status: ' + m.status, 'id', m.id, 'groupid', m.groupid, 'rcount', m.rcount, 'rc', m.rc);
 		$scope.refresh();
 	};
 
-	$scope.Mesibo_OnPermission = function(on) {
+	$scope.Mesibo_onMessageUpdate = function(m) {
+	}
+
+	$scope.Mesibo_onPermission = function(on) {
 		MesiboLog('Mesibo_onPermission: ' + on);
 		if (on) {
 			MesiboLog('Show permission prompt');
@@ -695,7 +698,7 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		}
 	};
 
-	$scope.Mesibo_OnLocalMedia = function(m) {
+	$scope.Mesibo_onLocalMedia = function(m) {
 		MesiboLog('Mesibo_OnLocalMedia: ', m);
 	};
 
@@ -867,7 +870,7 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		$scope.updateParticipants(p);
 	};
 
-	$scope.Mesibo_OnError = function(e) {
+	$scope.Mesibo_onError = function(e) {
 		ErrorLog('====> Mesibo_OnError', e);
 	};
 
@@ -2089,14 +2092,14 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 
 	};
 
-	$scope.hideFullScreen = function(stream_index) {
+$scope.hideFullScreen = function(stream_index) {
 		$scope.expanded_video_selected = null;
 		$('#fullScreenModal').modal('hide');
 		$('body').removeClass('modal-open');
 		$('.modal-backdrop').remove();
-	};
+};
 
-	$scope.isHidden = function(el) {
+$scope.isHidden = function(el) {
 		// MesiboLog('isHidden', el, bHidden);
 		if (!isValid(el))
 			return true;
@@ -2105,9 +2108,9 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		var bHidden = (style.display === 'none');
 		// MesiboLog('isHidden', el, bHidden);
 		return bHidden;
-	};
+};
 
-	$scope.getPopupGridPosition = function(popup_id) {
+$scope.getPopupGridPosition = function(popup_id) {
 		if (!isValid(popup_id)) {
 			return -1;
 		}
@@ -2120,9 +2123,9 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		}
 
 		return -1;
-	};
+};
 
-	$scope.freePopupGridPosition = function(popup_id) {
+$scope.freePopupGridPosition = function(popup_id) {
 		if (!isValid(popup_id))
 			return -1;
 
@@ -2133,9 +2136,9 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 			}
 		}
 		return -1;
-	};
+};
 
-	$scope.placePopupInGrid = function(popup_div, popup_identifier) {
+$scope.placePopupInGrid = function(popup_div, popup_identifier) {
 		if (!isValid(popup_div) || !isValid(popup_identifier))
 			return null;
 
@@ -2152,7 +2155,7 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		popup_div.style.bottom = shift_bottom;
 
 		return popup_div;
-	};
+};
 
 $scope.getMessageSession = function(session_key, peer, groupid){
 	//if($scope.messageSession[session_key])
@@ -2509,7 +2512,7 @@ $scope.initMesibo = function() {
 	$scope.mesibo.setDatabase('mesibo');
 	$scope.mesibo.start();
 
-	$scope.file = new MesiboFile($scope);
+	$scope.file = new MesiboDemoFile($scope);
 }
 
 
@@ -3138,7 +3141,7 @@ $scope.initGroupCall = function(profile, publish) {
 	$scope.room.publish = publish;
 
 	if (!publish) {
-		toastr.error('You do not have the permission to publish');
+		toastr.error('You do not have the permission to publish or the group is expired');
 		$scope.publisher = {'isConnected': false, 'streamOptions': false, 'isPublished': false, 'phantom': true};
 		$scope.refresh();
 		return;
