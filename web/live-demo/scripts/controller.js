@@ -870,6 +870,11 @@ mesiboLive.controller('roomController', ['$scope', '$window', '$compile', '$time
 		$scope.updateParticipants(p);
 	};
 
+	$scope.MesiboGroupcall_OnVideoSourceChanged = function(p, source, index) {
+		MesiboLog('MesiboGroupcall_OnVideoSourceChanged', p);
+
+	}
+
 	$scope.Mesibo_onError = function(e) {
 		ErrorLog('====> Mesibo_OnError', e);
 	};
@@ -2160,8 +2165,9 @@ $scope.placePopupInGrid = function(popup_div, popup_identifier) {
 $scope.getMessageSession = function(session_key, peer, groupid){
 	//if($scope.messageSession[session_key])
 	//return $scope.messageSession[session_key];
+	var profile = $scope.mesibo.getProfile(peer, groupid);
 
-	$scope.messageSession[session_key] = $scope.mesibo.readDbSession(peer, groupid, null,
+	$scope.messageSession[session_key] = profile.createReadSession(
 		function on_read(count) {
 			MesiboLog('sessionReadMessages complete', session_key, count);
 			MesiboLog($scope.messageSession[session_key].getMessages());
