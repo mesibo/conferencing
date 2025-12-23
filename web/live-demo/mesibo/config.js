@@ -40,21 +40,10 @@
  */
 const MESIBO_APP_ID = "web";
 
-/* If you are hosting Mesibo backend on your own server, change this accordingly.
- * Refer https://github.com/mesibo/conferencing/tree/master/live-demo/backend 
- */
-const MESIBO_API_BACKEND = 'https://app.mesibo.com/conf/api.php';
-
 const SHOW_CONF_LIMITS_ALERT = true; 
 
-/* If you are hosting Mesibo backend on your own server, 
- * use your own captcha token 
- */
-const MESIBO_CAPTCHA_TOKEN = '6LceR_sUAAAAAEfV7LZK2cOaOHRzPSCNEK-_jcfU';
-
 /* File url sources */
-var MESIBO_DOWNLOAD_URL = 'https://appimages.mesibo.com/';
-var MESIBO_UPLOAD_URL = 'https://s3.mesibo.com/api.php';
+var MESIBO_UPLOAD_URL = 'https://storage.mesibo.com/upload/';
 
 
 /* Debug Mode Configuration */

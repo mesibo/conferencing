@@ -2453,16 +2453,6 @@ $scope.sendJsonMessage = function(pObject, pType){
 
 	$scope.mesibo.sendMessage(m, m.id, m.message);
 
-	// disabled in new api
-	if(false && $scope.room.publish){
-		var room = $scope.room;
-		var user = $scope.user;
-
-		var request = 'token=' + user.token + '&op=setboard&gid=' + room.gid + '&pin=' + room.pin + '&obj=' + JSON.stringify(pObject);	   
-		sendRequest(MESIBO_API_BACKEND, saveBoard, request);
-	}
-
-
 	return 0;
 }
 
@@ -2495,12 +2485,6 @@ $scope.clearBoard = function(resetType){
 
 	var room = $scope.room;
 	var user = $scope.user;
-
-	if(false && $scope.room.publish){
-		request = 'token=' + user.token + '&op=setboard&gid=' + room.gid + '&pin=' + room.pin+ '&reset=' + resetType +'&obj='+ JSON.stringify({"test":"someprop","id":{"muid":user.uid,"uid":user.uid,"ts":1,"mts":1}});
-		MesiboLog(MESIBO_API_BACKEND + '?' + request);
-		sendRequest(MESIBO_API_BACKEND, clearBoard, request);
-	}        
 
 	$scope.sendClearEvent(resetType);
 }
@@ -3502,8 +3486,6 @@ $scope.initBoard = function(){
 	/* save the board state on your server
 	request = 'token=' + user.token + '&op=getboard&gid=' + room.gid + '&pin=' + room.pin;
 	MesiboLog('initBoard');
-	MesiboLog(MESIBO_API_BACKEND+'?'+request);
-	sendRequest(MESIBO_API_BACKEND, $scope.initSyncBoard, request);		
 	*/
 	// send dummy response for now
 	$scope.initSyncBoard(JSON.stringify({result: "OK", count:0, objs:[] }));
